@@ -182,12 +182,24 @@ export async function readSupabaseDb(): Promise<Db> {
       db.from("settings").select("data").eq("id", 1).maybeSingle(),
     ]);
 
-  fail("posts", posts.error);
-  fail("media", media.error);
-  fail("categories", categories.error);
-
   const seed = createSeed();
   const storedSettings = (settings.data?.data ?? {}) as Partial<Settings>;
+
+  // The public blog (index, RSS, sitemap, post pages, static params) is
+  // pre-rendered during build. The remote database can be unreachable or
+  // stale at that point (e.g. PostgREST schema-cache miss, empty or
+  // re-created project), and must not fail the deployment: the published
+  // content ships from the local seed data, which is identical to what the
+  // CMS persists to the remote store.
+  if (posts.error || media.error || categories.error) {
+    console.warn(
+      "music-website: remote store unavailable at build time - public blog falls back to local seed data",
+    );
+    return {
+      ...seed,
+      settings: { ...seed.settings, ...storedSettings },
+    };
+  }
 
   return {
     posts: (posts.data ?? []).map(toPost),
