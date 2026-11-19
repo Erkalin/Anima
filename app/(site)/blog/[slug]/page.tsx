@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense, type CSSProperties } from "react";
-import { getBlogIndex, getBlogPost, getPostSlugs, siteUrl, telegramLink } from "@/lib/blog";
+import { getBlogIndex, getBlogPost, siteUrl, telegramLink } from "@/lib/blog";
 import { countWords, faDate, toFa } from "@/lib/utils";
 import { extractToc } from "@/lib/markdown/toc";
 import { Markdown } from "@/lib/markdown/Markdown";
@@ -15,10 +15,11 @@ import { ViewPing } from "./ViewPing";
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateStaticParams() {
-  const slugs = await getPostSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+// No generateStaticParams here: with Cache Components it must return at
+// least one slug, which breaks the build whenever the blog has no published
+// posts (e.g. a fresh Supabase database). Slugs are runtime data instead —
+// awaited inside the Suspense boundary below, with post data cached by the
+// "use cache" layer in lib/blog.ts.
 
 export async function generateMetadata({
   params,
