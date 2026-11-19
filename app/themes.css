@@ -1,0 +1,193 @@
+/* Five Persian-named rooms. آبنوس (the default) lives in the :root tokens of
+   globals.css and studio.css; each block below repaints every token for its
+   room. The rule: themes repaint the room, not the instruments. The piano-key
+   and violin line art, the metronome case and the Telegram preview keep
+   their real-object colors in every theme. */
+
+html[data-theme="lajvard"] {
+  color-scheme: dark;
+  --ink: #eceaf2;
+  --ink-strong: #f7f5fc;
+  --paper: #101425;
+  --paper-2: #171c31;
+  --paper-3: #1f2540;
+  --paper-4: #2a3152;
+  --wood: #070912;
+  --brass: #d4a94e;
+  --brass-hi: #e8c36a;
+  --brass-on-dark: #e8c36a;
+  --verdigris: #8fb07a;
+  --copper: #e06a45;
+  --steel: #7fa8c8;
+  --velvet: #b08ac0;
+  --amber: #e8c36a;
+  --glow-brass: #f2c14e;
+  --glow-copper: #ff7a50;
+  --glow-steel: #74b8e8;
+  --glow-rosin: #a9c96b;
+  --glow-velvet: #c08ad8;
+  --glow-amber: #ffd24d;
+  --stage-0: #0b0e1a;
+  --stage-1: #101425;
+  --stage-2: #171c31;
+  --stage-3: #1f2540;
+  --stage-4: #2a3152;
+  --cool: #101828;
+  --scrim: rgba(5, 7, 14, 0.72);
+  --on-dark: #eceaf2;
+  --on-accent: #14100a;
+  --on-hot: #fff4ec;
+  --shadow-ink: #000;
+  --cta-shadow: 0 -10px 30px rgba(0, 0, 0, 0.55);
+  --lift: 0 18px 44px -22px rgba(0, 0, 0, 0.9);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(242, 193, 78, 0.3), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(7, 9, 18, 0.35), transparent 70%),
+    linear-gradient(160deg, #2a3152 0%, #1f2540 55%, #171c31 100%);
+}
+
+html[data-theme="arghavan"] {
+  color-scheme: dark;
+  --ink: #f2e9ee;
+  --ink-strong: #faf3f7;
+  --paper: #1b101b;
+  --paper-2: #251725;
+  --paper-3: #301e30;
+  --paper-4: #3e283e;
+  --wood: #0c060c;
+  --brass: #d678a0;
+  --brass-hi: #e892b4;
+  --brass-on-dark: #e892b4;
+  --verdigris: #90b080;
+  --copper: #e0705a;
+  --steel: #8fa8d0;
+  --velvet: #c08ac8;
+  --amber: #e8a86a;
+  --glow-brass: #f08ab0;
+  --glow-copper: #ff7a6e;
+  --glow-steel: #8fb0e8;
+  --glow-rosin: #b8c878;
+  --glow-velvet: #d88ae8;
+  --glow-amber: #ffb478;
+  --stage-0: #120a12;
+  --stage-1: #1b101b;
+  --stage-2: #251725;
+  --stage-3: #301e30;
+  --stage-4: #3e283e;
+  --cool: #1a1220;
+  --scrim: rgba(10, 5, 10, 0.72);
+  --on-dark: #f2e9ee;
+  --on-accent: #1c0f18;
+  --on-hot: #fff2f0;
+  --shadow-ink: #000;
+  --cta-shadow: 0 -10px 30px rgba(0, 0, 0, 0.55);
+  --lift: 0 18px 44px -22px rgba(0, 0, 0, 0.9);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(240, 138, 176, 0.3), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(12, 6, 12, 0.35), transparent 70%),
+    linear-gradient(160deg, #3e283e 0%, #301e30 55%, #251725 100%);
+}
+
+html[data-theme="firuzeh"] {
+  color-scheme: dark;
+  --ink: #e8f0ec;
+  --ink-strong: #f2f8f4;
+  --paper: #0c1b1b;
+  --paper-2: #122525;
+  --paper-3: #183030;
+  --paper-4: #204040;
+  --wood: #040d0d;
+  --brass: #52c0b0;
+  --brass-hi: #7ad8c8;
+  --brass-on-dark: #7ad8c8;
+  --verdigris: #7fb08a;
+  --copper: #e07850;
+  --steel: #70a8c0;
+  --velvet: #a888c0;
+  --amber: #e0b85c;
+  --glow-brass: #5ed4c0;
+  --glow-copper: #ff8a5c;
+  --glow-steel: #6fb8e0;
+  --glow-rosin: #a8c86a;
+  --glow-velvet: #c890c0;
+  --glow-amber: #ffc85c;
+  --stage-0: #071212;
+  --stage-1: #0c1b1b;
+  --stage-2: #122525;
+  --stage-3: #183030;
+  --stage-4: #204040;
+  --cool: #0e1a20;
+  --scrim: rgba(3, 9, 9, 0.72);
+  --on-dark: #e8f0ec;
+  --on-accent: #061412;
+  --on-hot: #fff4ec;
+  --shadow-ink: #000;
+  --cta-shadow: 0 -10px 30px rgba(0, 0, 0, 0.55);
+  --lift: 0 18px 44px -22px rgba(0, 0, 0, 0.9);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(94, 212, 192, 0.28), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(4, 13, 13, 0.35), transparent 70%),
+    linear-gradient(160deg, #204040 0%, #183030 55%, #122525 100%);
+}
+
+html[data-theme="sahargah"] {
+  color-scheme: light;
+  --ink: #2a1e14;
+  --ink-strong: #1c120a;
+  --paper: #f5ede0;
+  --paper-2: #efe6d6;
+  --paper-3: #ebe1cf;
+  --paper-4: #e6dac6;
+  --wood: #e9dfcc;
+  --brass: #965222;
+  --brass-hi: #7f4519;
+  --brass-on-dark: #965222;
+  --verdigris: #446d38;
+  --copper: #a94128;
+  --steel: #34688c;
+  --velvet: #8c4a78;
+  --amber: #845b18;
+  --glow-brass: #965222;
+  --glow-copper: #a94128;
+  --glow-steel: #34688c;
+  --glow-rosin: #446d32;
+  --glow-velvet: #8c4a78;
+  --glow-amber: #845b18;
+  --stage-0: #f8f1e6;
+  --stage-1: #f5ede0;
+  --stage-2: #efe6d6;
+  --stage-3: #ebe1cf;
+  --stage-4: #e6dac6;
+  --cool: #1a2a38;
+  --scrim: rgba(30, 20, 12, 0.5);
+  --on-dark: #2a1e14;
+  --on-accent: #fdf8ef;
+  --on-hot: #fff4ec;
+  --shadow-ink: #5a4028;
+  --cta-shadow: 0 -10px 30px rgba(96, 64, 32, 0.28);
+  --lift: 0 18px 44px -22px rgba(90, 60, 30, 0.35);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(176, 96, 40, 0.22), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(213, 196, 168, 0.4), transparent 70%),
+    linear-gradient(160deg, #ebe1cf 0%, #efe6d6 55%, #f5ede0 100%);
+}
+
+/* Alpha tokens derive from each room's own ink and band text, so hairlines
+   and soft text stay correct on both dark and light grounds. */
+html[data-theme="lajvard"],
+html[data-theme="arghavan"],
+html[data-theme="firuzeh"],
+html[data-theme="sahargah"] {
+  --ink-soft: color-mix(in srgb, var(--ink) 68%, transparent);
+  --oak: color-mix(in srgb, var(--ink) 22%, transparent);
+  --edge: color-mix(in srgb, var(--ink) 34%, transparent);
+  --hair: color-mix(in srgb, var(--ink) 14%, transparent);
+  --hair-2: color-mix(in srgb, var(--ink) 26%, transparent);
+  --on-dark-soft: color-mix(in srgb, var(--on-dark) 70%, transparent);
+  --on-dark-line: color-mix(in srgb, var(--on-dark) 12%, transparent);
+  --verdigris-dim: color-mix(in srgb, var(--verdigris) 14%, transparent);
+  --copper-dim: color-mix(in srgb, var(--copper) 14%, transparent);
+  --steel-dim: color-mix(in srgb, var(--steel) 14%, transparent);
+  --velvet-dim: color-mix(in srgb, var(--velvet) 14%, transparent);
+  --amber-dim: color-mix(in srgb, var(--amber) 14%, transparent);
+}
