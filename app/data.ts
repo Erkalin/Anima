@@ -1,8 +1,7 @@
 export const brand = "آنیما";
 
-// TODO: put the real Telegram handle here. Until it is set, every button points at
-// Telegram's home page and the pages show a "به‌زودی" note instead of a dead link.
-export const telegramUsername = "";
+// Team Telegram handle. Every Telegram button on the site reads this value.
+export const telegramUsername: string = "AnimaMusicSupport";
 export const telegramHref = telegramUsername
   ? `https://t.me/${telegramUsername}`
   : "https://t.me/";
@@ -10,7 +9,7 @@ export const telegramPending = telegramUsername === "";
 
 // Bale (بله) handle — same pattern as Telegram. Until it is set, the contact
 // button shows a "به‌زودی" note and points at the on-site composer instead.
-export const baleUsername = "";
+export const baleUsername: string = "";
 export const baleHref = baleUsername
   ? `https://ble.ir/${baleUsername}`
   : "https://ble.ir/";
