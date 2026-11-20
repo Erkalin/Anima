@@ -2823,3 +2823,227 @@ textarea.compose-bubble:focus-visible {
 
   .stage-copy > * { animation: none !important; }
 }
+
+/* ---------- floating contact button ---------- */
+.contact-fab {
+  position: fixed;
+  right: clamp(1rem, 3vw, 1.6rem);
+  bottom: clamp(1rem, 3vw, 1.6rem);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.8rem;
+}
+
+/* keep clear of the mobile bottom CTA bar */
+@media (max-width: 47.99rem) {
+  .contact-fab {
+    bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    right: 0.9rem;
+  }
+}
+
+.contact-fab-btn {
+  position: relative;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--brass) 60%, transparent);
+  background:
+    radial-gradient(120% 120% at 30% 20%, color-mix(in oklab, var(--brass) 88%, #fff) 0%, var(--brass) 55%, color-mix(in oklab, var(--brass) 72%, #000) 100%);
+  color: var(--stage-0);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow:
+    0 12px 32px -10px color-mix(in oklab, var(--brass) 65%, transparent),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4), box-shadow 0.25s ease;
+}
+
+.contact-fab-btn:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow:
+    0 18px 40px -10px color-mix(in oklab, var(--brass) 75%, transparent),
+    0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.contact-fab-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.contact-fab-glyph { display: grid; place-items: center; }
+.contact-fab-glyph svg { width: 1.55rem; height: 1.55rem; }
+
+.contact-fab-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in oklab, var(--brass) 65%, transparent);
+  animation: fab-pulse 2.8s ease-out infinite;
+  pointer-events: none;
+}
+
+.contact-fab[data-open] .contact-fab-ring { animation: none; opacity: 0; }
+
+@keyframes fab-pulse {
+  0% { transform: scale(0.92); opacity: 0.9; }
+  70% { transform: scale(1.32); opacity: 0; }
+  100% { transform: scale(1.32); opacity: 0; }
+}
+
+.contact-fab-tip {
+  position: absolute;
+  right: calc(100% + 0.75rem);
+  top: 50%;
+  translate: 0 -50%;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ink);
+  background: color-mix(in oklab, var(--paper-2) 92%, transparent);
+  border: 1px solid color-mix(in oklab, var(--brass) 35%, transparent);
+  border-radius: 0.6rem;
+  padding: 0.3rem 0.65rem;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.contact-fab-btn:hover .contact-fab-tip,
+.contact-fab-btn:focus-visible .contact-fab-tip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.contact-fab[data-open] .contact-fab-tip { opacity: 0; }
+
+.contact-panel {
+  width: min(20rem, calc(100vw - 1.8rem));
+  background: color-mix(in oklab, var(--paper-2) 94%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid color-mix(in oklab, var(--brass) 38%, transparent);
+  border-radius: 1.1rem;
+  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.55);
+  padding: 1rem;
+  transform-origin: bottom right;
+  animation: contact-panel-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+
+@keyframes contact-panel-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.94); }
+}
+
+.contact-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.contact-panel-title { font-weight: 900; font-size: 1.05rem; color: var(--ink); }
+.contact-panel-sub { font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.15rem; }
+
+.contact-close {
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.55rem;
+  border: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-close:hover { color: var(--ink); border-color: color-mix(in oklab, var(--brass) 55%, transparent); }
+.contact-close svg { width: 0.95rem; height: 0.95rem; }
+
+.contact-channels { display: grid; gap: 0.55rem; }
+
+.contact-channel {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--ink) 9%, transparent);
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  animation: contact-row-in 0.35s ease both;
+  animation-delay: calc(var(--i) * 70ms + 80ms);
+}
+
+@keyframes contact-row-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+.contact-channel:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--brass) 50%, transparent);
+  background: color-mix(in oklab, var(--ink) 9%, transparent);
+}
+
+.contact-channel-icon {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  display: grid;
+  place-items: center;
+}
+
+.contact-channel-icon svg { width: 1.45rem; height: 1.45rem; }
+
+.contact-channel[data-channel="telegram"] .contact-channel-icon {
+  background: color-mix(in oklab, #2aabee 18%, transparent);
+  color: #2aabee;
+}
+
+.contact-channel[data-channel="bale"] .contact-channel-icon {
+  background: color-mix(in oklab, #2f7cf6 18%, transparent);
+  color: #2f7cf6;
+}
+
+.contact-channel-text { display: grid; gap: 0.1rem; min-width: 0; }
+.contact-channel-name { font-weight: 800; font-size: 0.95rem; }
+
+.contact-channel-handle {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-channel-arrow {
+  margin-inline-start: auto;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.55;
+  transition: opacity 0.2s ease, translate 0.2s ease;
+}
+
+.contact-channel:hover .contact-channel-arrow { opacity: 1; translate: -3px 0; }
+
+.contact-panel-note {
+  margin-top: 0.8rem;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-fab-ring { animation: none; opacity: 0; }
+  .contact-panel,
+  .contact-channel { animation: none; }
+}

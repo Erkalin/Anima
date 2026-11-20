@@ -8,6 +8,14 @@ export const telegramHref = telegramUsername
   : "https://t.me/";
 export const telegramPending = telegramUsername === "";
 
+// Bale (بله) handle — same pattern as Telegram. Until it is set, the contact
+// button shows a "به‌زودی" note and points at the on-site composer instead.
+export const baleUsername = "";
+export const baleHref = baleUsername
+  ? `https://ble.ir/${baleUsername}`
+  : "https://ble.ir/";
+export const balePending = baleUsername === "";
+
 export type Instrument = "piano" | "violin";
 
 export type Teacher = {

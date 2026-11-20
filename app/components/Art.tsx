@@ -9,6 +9,19 @@ export function TelegramIcon() {
   );
 }
 
+// Placeholder Bale (بله) mark — a simple speech bubble in Bale blue.
+// TODO: replace with the official Bale logo asset once provided.
+export function BaleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M12 2C6.48 2 2 5.94 2 10.8c0 2.78 1.5 5.25 3.84 6.86-.1 1.02-.5 2.36-1.6 3.54 0 0 2.62-.42 4.6-1.72.99.28 2.05.44 3.16.44 5.52 0 10-3.94 10-8.8S17.52 2 12 2z"
+      />
+    </svg>
+  );
+}
+
 export function Staff() {
   return (
     <svg className="staff" viewBox="0 0 320 120" aria-hidden="true" focusable="false">

@@ -3,6 +3,7 @@ import "@/app/studio.css";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
 import { MobileCta } from "@/app/components/MobileCta";
+import { ContactFab } from "@/app/components/ContactFab";
 import { SoundProvider } from "@/app/components/studio/Sound";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
@@ -12,6 +13,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <main>{children}</main>
       <SiteFooter />
       <MobileCta />
+      <ContactFab />
     </SoundProvider>
   );
 }
