@@ -2921,129 +2921,363 @@ textarea.compose-bubble:focus-visible {
 
 .contact-fab[data-open] .contact-fab-tip { opacity: 0; }
 
-.contact-panel {
-  width: min(20rem, calc(100vw - 1.8rem));
-  background: color-mix(in oklab, var(--paper-2) 94%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+.contact-widget {
+  width: min(22.5rem, calc(100vw - 1.8rem));
+  height: min(32rem, calc(100dvh - 8.5rem));
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in oklab, var(--paper-2) 96%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid color-mix(in oklab, var(--brass) 38%, transparent);
-  border-radius: 1.1rem;
-  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.55);
-  padding: 1rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
   transform-origin: bottom right;
   animation: contact-panel-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+
+@media (max-width: 47.99rem) {
+  .contact-widget { height: min(30rem, calc(100dvh - 11rem)); }
 }
 
 @keyframes contact-panel-in {
   from { opacity: 0; transform: translateY(12px) scale(0.94); }
 }
 
-.contact-panel-head {
+.widget-head {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.6rem;
-  margin-bottom: 0.85rem;
+  padding: 0.85rem 0.95rem 0.6rem;
 }
 
-.contact-panel-title { font-weight: 900; font-size: 1.05rem; color: var(--ink); }
-.contact-panel-sub { font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.15rem; }
+.widget-avatar {
+  flex: none;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(120% 120% at 30% 20%, color-mix(in oklab, var(--brass) 88%, #fff) 0%, var(--brass) 60%, color-mix(in oklab, var(--brass) 72%, #000) 100%);
+  color: var(--stage-0);
+}
 
-.contact-close {
+.widget-avatar svg { width: 1.2rem; height: 1.2rem; }
+.widget-head-text { flex: 1; min-width: 0; }
+.widget-title { font-weight: 900; font-size: 1rem; color: var(--ink); }
+
+.widget-status {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+.widget-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.55);
+}
+
+.widget-dot[data-off] {
+  background: color-mix(in oklab, var(--ink) 40%, transparent);
+  box-shadow: none;
+}
+
+.widget-icon-btn {
   flex: none;
   width: 1.9rem;
   height: 1.9rem;
   display: grid;
   place-items: center;
   border-radius: 0.55rem;
-  border: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
   background: transparent;
   color: var(--ink-soft);
   cursor: pointer;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-.contact-close:hover { color: var(--ink); border-color: color-mix(in oklab, var(--brass) 55%, transparent); }
-.contact-close svg { width: 0.95rem; height: 0.95rem; }
+.widget-icon-btn:hover { color: var(--ink); border-color: color-mix(in oklab, var(--brass) 55%, transparent); }
+.widget-icon-btn svg { width: 0.95rem; height: 0.95rem; }
 
-.contact-channels { display: grid; gap: 0.55rem; }
+.widget-tabs {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0 0.95rem 0.6rem;
+  padding: 0.25rem;
+  border-radius: 0.7rem;
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+}
 
-.contact-channel {
+.widget-tab {
+  flex: 1;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.widget-tab[data-active] {
+  background: color-mix(in oklab, var(--brass) 22%, transparent);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--brass) 45%, transparent);
+}
+
+.widget-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0 0.95rem;
+}
+
+.chat-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.4rem 0.1rem 0.6rem;
+  scrollbar-width: thin;
+}
+
+.chat-msg { display: flex; flex-direction: column; max-width: 86%; }
+.chat-msg[data-role="user"] { align-self: flex-end; align-items: flex-end; }
+.chat-msg[data-role="model"] { align-self: flex-start; align-items: flex-start; }
+
+.chat-bubble {
+  padding: 0.55rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+.chat-msg[data-role="user"] .chat-bubble {
+  background: color-mix(in oklab, var(--brass) 26%, transparent);
+  border: 1px solid color-mix(in oklab, var(--brass) 40%, transparent);
+  color: var(--ink);
+  border-bottom-left-radius: 0.3rem;
+}
+
+.chat-msg[data-role="model"] .chat-bubble {
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  color: var(--ink);
+  border-bottom-right-radius: 0.3rem;
+}
+
+.chat-msg[data-note] .chat-bubble {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  border-style: dashed;
+}
+
+.chat-time {
+  font-size: 0.62rem;
+  color: var(--ink-soft);
+  opacity: 0.75;
+  margin-top: 0.15rem;
+  padding-inline: 0.3rem;
+}
+
+.chat-typing { display: inline-flex; gap: 0.3rem; align-items: center; padding: 0.65rem 0.8rem; }
+
+.chat-typing i {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--ink-soft);
+  animation: chat-bounce 1s infinite ease-in-out;
+}
+
+.chat-typing i:nth-child(2) { animation-delay: 0.15s; }
+.chat-typing i:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes chat-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.chat-quick { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.3rem 0 0.55rem; }
+
+.chat-chip {
+  border: 1px solid color-mix(in oklab, var(--brass) 45%, transparent);
+  background: color-mix(in oklab, var(--brass) 12%, transparent);
+  color: var(--ink);
+  border-radius: 2rem;
+  padding: 0.3rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.chat-chip:hover { background: color-mix(in oklab, var(--brass) 22%, transparent); transform: translateY(-1px); }
+
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.55rem 0 0.7rem;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+}
+
+.chat-input input {
+  flex: 1;
+  min-width: 0;
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.8rem;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.chat-input input:focus { border-color: color-mix(in oklab, var(--brass) 60%, transparent); }
+.chat-input input::placeholder { color: var(--ink-soft); }
+
+.chat-send {
+  flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: none;
+  display: grid;
+  place-items: center;
+  background: var(--brass);
+  color: var(--stage-0);
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.chat-send:hover:not(:disabled) { transform: scale(1.08); }
+.chat-send:disabled { opacity: 0.45; cursor: default; }
+.chat-send svg { width: 1.1rem; height: 1.1rem; }
+
+.widget-team { gap: 0.8rem; padding-bottom: 0.8rem; overflow-y: auto; }
+
+.team-intro {
+  text-align: center;
+  padding: 0.9rem 0 0.2rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+}
+
+.team-avatar {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(120% 120% at 30% 20%, color-mix(in oklab, var(--brass) 88%, #fff) 0%, var(--brass) 60%, color-mix(in oklab, var(--brass) 72%, #000) 100%);
+  color: var(--stage-0);
+  box-shadow: 0 10px 26px -10px color-mix(in oklab, var(--brass) 60%, transparent);
+}
+
+.team-avatar svg { width: 1.6rem; height: 1.6rem; }
+.team-title { font-weight: 900; font-size: 1rem; color: var(--ink); }
+.team-sub { font-size: 0.78rem; color: var(--ink-soft); }
+
+.team-channels { display: grid; gap: 0.55rem; }
+
+.team-channel {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.6rem 0.7rem;
+  padding: 0.65rem 0.75rem;
   border-radius: 0.85rem;
-  border: 1px solid color-mix(in oklab, var(--ink) 9%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
   background: color-mix(in oklab, var(--ink) 5%, transparent);
   color: var(--ink);
   text-decoration: none;
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-  animation: contact-row-in 0.35s ease both;
-  animation-delay: calc(var(--i) * 70ms + 80ms);
 }
 
-@keyframes contact-row-in {
-  from { opacity: 0; transform: translateY(8px); }
+.team-channel[data-primary] {
+  border-color: color-mix(in oklab, var(--brass) 55%, transparent);
+  background: color-mix(in oklab, var(--brass) 14%, transparent);
 }
 
-.contact-channel:hover {
+.team-channel:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--brass) 50%, transparent);
-  background: color-mix(in oklab, var(--ink) 9%, transparent);
+  border-color: color-mix(in oklab, var(--brass) 60%, transparent);
 }
 
-.contact-channel-icon {
+.team-channel-icon {
   flex: none;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.75rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.7rem;
   display: grid;
   place-items: center;
 }
 
-.contact-channel-icon svg { width: 1.45rem; height: 1.45rem; }
-
-.contact-channel[data-channel="telegram"] .contact-channel-icon {
+.team-channel[data-channel="telegram"] .team-channel-icon {
   background: color-mix(in oklab, #2aabee 18%, transparent);
   color: #2aabee;
 }
 
-.contact-channel[data-channel="bale"] .contact-channel-icon {
+.team-channel[data-channel="bale"] .team-channel-icon {
   background: color-mix(in oklab, #2f7cf6 18%, transparent);
   color: #2f7cf6;
 }
 
-.contact-channel-text { display: grid; gap: 0.1rem; min-width: 0; }
-.contact-channel-name { font-weight: 800; font-size: 0.95rem; }
+.team-channel-icon svg { width: 1.35rem; height: 1.35rem; }
+.team-channel-text { display: grid; gap: 0.1rem; min-width: 0; }
+.team-channel-name { font-weight: 800; font-size: 0.92rem; }
 
-.contact-channel-handle {
-  font-size: 0.78rem;
+.team-channel-handle {
+  font-size: 0.75rem;
   color: var(--ink-soft);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.contact-channel-arrow {
-  margin-inline-start: auto;
-  width: 1rem;
-  height: 1rem;
-  opacity: 0.55;
-  transition: opacity 0.2s ease, translate 0.2s ease;
-}
+.team-channel-arrow { margin-inline-start: auto; width: 1rem; height: 1rem; opacity: 0.55; }
 
-.contact-channel:hover .contact-channel-arrow { opacity: 1; translate: -3px 0; }
-
-.contact-panel-note {
-  margin-top: 0.8rem;
+.team-form-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   font-size: 0.75rem;
   color: var(--ink-soft);
+  text-decoration: none;
+  padding: 0.5rem;
+  border-top: 1px dashed color-mix(in oklab, var(--ink) 15%, transparent);
+  transition: color 0.2s ease;
+}
+
+.team-form-link:hover { color: var(--ink); }
+.team-form-link svg { width: 0.85rem; height: 0.85rem; }
+
+.widget-foot {
+  padding: 0.5rem 0.95rem 0.65rem;
   text-align: center;
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+  border-top: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .contact-fab-ring { animation: none; opacity: 0; }
-  .contact-panel,
-  .contact-channel { animation: none; }
+  .contact-widget { animation: none; }
+  .chat-typing i { animation: none; }
 }
