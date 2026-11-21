@@ -2978,8 +2978,8 @@ textarea.compose-bubble:focus-visible {
 }
 
 .widget-avatar svg { width: 1.2rem; height: 1.2rem; }
-.widget-head-text { flex: 1; min-width: 0; }
-.widget-title { font-weight: 900; font-size: 1rem; color: var(--ink); }
+.widget-head-text { flex: 1; min-width: 0; display: grid; gap: 0.08rem; }
+.widget-title { font-weight: 900; font-size: 1rem; line-height: 1.35; color: var(--ink); }
 
 .widget-status {
   display: flex;
@@ -2990,16 +2990,19 @@ textarea.compose-bubble:focus-visible {
 }
 
 .widget-dot {
-  width: 0.45rem;
-  height: 0.45rem;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   background: #4ade80;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.55);
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55);
+  animation: live-pulse 2.2s ease-out infinite;
 }
 
 .widget-dot[data-off] {
   background: color-mix(in oklab, var(--ink) 40%, transparent);
   box-shadow: none;
+  animation: none;
 }
 
 .widget-icon-btn {
@@ -3700,6 +3703,6 @@ textarea.compose-bubble:focus-visible {
 .live-retry:hover { text-decoration: underline; }
 
 @media (prefers-reduced-motion: reduce) {
-  .live-launch-pulse { animation: none; }
+  .live-launch-pulse, .widget-dot { animation: none; }
   .fab-badge, .emoji-picker, .reaction-chip { animation: none; }
 }

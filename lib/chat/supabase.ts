@@ -84,13 +84,23 @@ export async function startConversation(
     .maybeSingle();
   fail("start.lookup", found.error);
   if (found.data) return toConversation(found.data);
-  const created = await db
+  const upserted = await db
     .from("chat_conversations")
-    .insert({ visitor_token: token, visitor_name: name, visitor_seen_at: now() })
+    .upsert(
+      { visitor_token: token, visitor_name: name, visitor_seen_at: now() },
+      { onConflict: "visitor_token", ignoreDuplicates: true },
+    )
     .select("*")
+    .maybeSingle();
+  fail("start.insert", upserted.error);
+  if (upserted.data) return toConversation(upserted.data);
+  const retry = await db
+    .from("chat_conversations")
+    .select("*")
+    .eq("visitor_token", token)
     .single();
-  fail("start.insert", created.error);
-  return toConversation(created.data);
+  fail("start.retry", retry.error);
+  return toConversation(retry.data);
 }
 
 export async function conversationByToken(
@@ -123,6 +133,7 @@ export async function listConversations(): Promise<ChatConversation[]> {
   const { data, error } = await serviceClient()
     .from("chat_conversations")
     .select("*")
+    .neq("last_preview", "")
     .order("last_message_at", { ascending: false })
     .limit(300);
   fail("list", error);

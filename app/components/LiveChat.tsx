@@ -77,7 +77,6 @@ export function LiveChat({
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<Set<string>>(new Set());
-  const [adminOnline, setAdminOnline] = useState(false);
   const [adminTyping, setAdminTyping] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDraft, setEditDraft] = useState("");
@@ -85,9 +84,12 @@ export function LiveChat({
   const [confirmFor, setConfirmFor] = useState<string | null>(null);
   const [renaming, setRenaming] = useState(false);
   const [renameDraft, setRenameDraft] = useState("");
+  const [starting, setStarting] = useState(false);
 
   const msgsRef = useRef<ChatMessage[]>([]);
   const sinceRef = useRef<string | null>(null);
+  const pendingTokenRef = useRef<string | null>(null);
+  const startingRef = useRef(false);
   const firstPoll = useRef(true);
   const nearBottom = useRef(true);
   const tmpCounter = useRef(0);
@@ -149,7 +151,6 @@ export function LiveChat({
           return;
         }
         sinceRef.current = d.serverNow;
-        setAdminOnline(Boolean(d.conversation?.adminOnline));
         setAdminTyping(Boolean(d.conversation?.adminTyping));
         const freshAdmin = (d.messages as ChatMessage[]).filter(
           (m) =>
@@ -209,24 +210,37 @@ export function LiveChat({
   // ---- gate -------------------------------------------------------------
   async function startChat(e: FormEvent) {
     e.preventDefault();
+    if (startingRef.current) return;
     const name = nameDraft.replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
     if (!name) return;
-    const token = identity?.token ?? crypto.randomUUID();
+    const token =
+      identity?.token ??
+      pendingTokenRef.current ??
+      (pendingTokenRef.current = crypto.randomUUID());
+    startingRef.current = true;
+    setStarting(true);
     try {
       const { ok } = await post({ action: "start", name }, token);
-      if (!ok) return;
+      if (!ok) {
+        setGateNote("اتصال برقرار نشد؛ دوباره تلاش کن.");
+        return;
+      }
       const next = { token, name };
       try {
         window.localStorage.setItem(LIVE_STORE_KEY, JSON.stringify(next));
       } catch {
         /* private mode — chat works for this visit */
       }
+      pendingTokenRef.current = null;
       sinceRef.current = null;
       firstPoll.current = true;
       setGateNote("");
       setIdentity(next);
     } catch {
       setGateNote("اتصال برقرار نشد؛ دوباره تلاش کن.");
+    } finally {
+      startingRef.current = false;
+      setStarting(false);
     }
   }
 
@@ -354,7 +368,7 @@ export function LiveChat({
             aria-label="اسم شما"
             autoFocus
           />
-          <button type="submit" className="live-gate-btn" disabled={!nameDraft.trim()}>
+          <button type="submit" className="live-gate-btn" disabled={starting || !nameDraft.trim()}>
             شروع گفتگو
           </button>
         </form>
@@ -376,8 +390,8 @@ export function LiveChat({
         <div className="widget-head-text">
           <p className="widget-title">گفتگوی زنده</p>
           <p className="widget-status">
-            <span className="widget-dot" data-off={!adminOnline || undefined} aria-hidden="true" />
-            {adminTyping ? "تیم در حال نوشتن…" : adminOnline ? "تیم آنلاین است" : "تیم به‌زودی پاسخ می‌دهد"}
+            <span className="widget-dot" aria-hidden="true" />
+            {adminTyping ? "تیم در حال نوشتن…" : "آنلاین"}
           </p>
         </div>
       </div>

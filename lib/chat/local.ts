@@ -18,19 +18,38 @@ const FILE = path.join(DATA_DIR, "chat.json");
 type Store = { conversations: ChatConversation[]; messages: ChatMessage[] };
 
 let cache: Store | null = null;
+let loadPromise: Promise<Store> | null = null;
 
 async function read(): Promise<Store> {
   if (cache) return cache;
-  try {
-    const parsed = JSON.parse(await readFile(FILE, "utf8")) as Store;
-    cache = {
-      conversations: parsed.conversations ?? [],
-      messages: parsed.messages ?? [],
-    };
-  } catch {
-    cache = { conversations: [], messages: [] };
+  if (!loadPromise) {
+    loadPromise = (async () => {
+      try {
+        const parsed = JSON.parse(await readFile(FILE, "utf8")) as Store;
+        cache = {
+          conversations: parsed.conversations ?? [],
+          messages: parsed.messages ?? [],
+        };
+      } catch {
+        cache = { conversations: [], messages: [] };
+      }
+      return cache;
+    })();
   }
-  return cache;
+  return loadPromise;
+}
+
+let chain: Promise<unknown> = Promise.resolve();
+
+async function mutate<T>(fn: (store: Store) => T | Promise<T>): Promise<T> {
+  const run = chain.then(async () => {
+    const store = await read();
+    const result = await fn(store);
+    await write(store);
+    return result;
+  });
+  chain = run.catch(() => undefined);
+  return run;
 }
 
 async function write(store: Store): Promise<void> {
@@ -64,27 +83,28 @@ export async function startConversation(
   token: string,
   name: string,
 ): Promise<ChatConversation> {
-  const store = await read();
-  const existing = store.conversations.find((c) => c.visitorToken === token);
-  if (existing) return existing;
-  const conv: ChatConversation = {
-    id: randomUUID(),
-    visitorToken: token,
-    visitorName: name,
-    createdAt: now(),
-    lastMessageAt: now(),
-    lastPreview: "",
-    unreadAdmin: 0,
-    unreadVisitor: 0,
-    archived: false,
-    visitorSeenAt: now(),
-    adminSeenAt: null,
-    visitorTypingAt: null,
-    adminTypingAt: null,
-  };
-  store.conversations.push(conv);
-  await write(store);
-  return conv;
+  return mutate((store) => {
+    const existing = store.conversations.find((c) => c.visitorToken === token);
+    if (existing) return existing;
+    const ts = now();
+    const conv: ChatConversation = {
+      id: randomUUID(),
+      visitorToken: token,
+      visitorName: name,
+      createdAt: ts,
+      lastMessageAt: ts,
+      lastPreview: "",
+      unreadAdmin: 0,
+      unreadVisitor: 0,
+      archived: false,
+      visitorSeenAt: ts,
+      adminSeenAt: null,
+      visitorTypingAt: null,
+      adminTypingAt: null,
+    };
+    store.conversations.push(conv);
+    return conv;
+  });
 }
 
 export async function conversationByToken(
@@ -98,19 +118,20 @@ export async function renameConversation(
   token: string,
   name: string,
 ): Promise<ChatConversation | null> {
-  const store = await read();
-  const conv = store.conversations.find((c) => c.visitorToken === token);
-  if (!conv) return null;
-  conv.visitorName = name;
-  await write(store);
-  return conv;
+  return mutate((store) => {
+    const conv = store.conversations.find((c) => c.visitorToken === token);
+    if (!conv) return null;
+    conv.visitorName = name;
+    return conv;
+  });
 }
 
 export async function listConversations(): Promise<ChatConversation[]> {
   const store = await read();
-  return [...store.conversations].sort(
-    (a, b) => b.lastMessageAt.localeCompare(a.lastMessageAt),
-  );
+  const withMessages = new Set(store.messages.map((m) => m.conversationId));
+  return store.conversations
+    .filter((c) => c.lastPreview !== "" || withMessages.has(c.id))
+    .sort((a, b) => b.lastMessageAt.localeCompare(a.lastMessageAt));
 }
 
 export async function unreadTotal(): Promise<number> {
@@ -125,18 +146,17 @@ export async function setArchived(
   id: string,
   archived: boolean,
 ): Promise<void> {
-  const store = await read();
-  const conv = conversationOf(store, id);
-  if (!conv) return;
-  conv.archived = archived;
-  await write(store);
+  await mutate((store) => {
+    const conv = conversationOf(store, id);
+    if (conv) conv.archived = archived;
+  });
 }
 
 export async function removeConversation(id: string): Promise<void> {
-  const store = await read();
-  store.conversations = store.conversations.filter((c) => c.id !== id);
-  store.messages = store.messages.filter((m) => m.conversationId !== id);
-  await write(store);
+  await mutate((store) => {
+    store.conversations = store.conversations.filter((c) => c.id !== id);
+    store.messages = store.messages.filter((m) => m.conversationId !== id);
+  });
 }
 
 // ------------------------------------------------------------------ polling
@@ -159,25 +179,25 @@ function threadMessages(
 
 /** One read + one write per poll: messages, mark-read and presence together. */
 export async function visitorPoll(token: string, since: string | null) {
-  const store = await read();
-  const conv = store.conversations.find((c) => c.visitorToken === token);
-  if (!conv) return null;
-  const messages = threadMessages(store, conv.id, since);
-  conv.unreadVisitor = 0;
-  conv.visitorSeenAt = now();
-  await write(store);
-  return { conversation: conv, messages };
+  return mutate((store) => {
+    const conv = store.conversations.find((c) => c.visitorToken === token);
+    if (!conv) return null;
+    const messages = threadMessages(store, conv.id, since);
+    conv.unreadVisitor = 0;
+    conv.visitorSeenAt = now();
+    return { conversation: conv, messages };
+  });
 }
 
 export async function adminPoll(convId: string, since: string | null) {
-  const store = await read();
-  const conv = conversationOf(store, convId);
-  if (!conv) return null;
-  const messages = threadMessages(store, conv.id, since);
-  conv.unreadAdmin = 0;
-  conv.adminSeenAt = now();
-  await write(store);
-  return { conversation: conv, messages };
+  return mutate((store) => {
+    const conv = conversationOf(store, convId);
+    if (!conv) return null;
+    const messages = threadMessages(store, conv.id, since);
+    conv.unreadAdmin = 0;
+    conv.adminSeenAt = now();
+    return { conversation: conv, messages };
+  });
 }
 
 // ----------------------------------------------------------------- messages
@@ -187,27 +207,28 @@ export async function sendMessage(
   sender: ChatSender,
   body: string,
 ): Promise<ChatMessage | null> {
-  const store = await read();
-  const conv = conversationOf(store, convId);
-  if (!conv) return null;
-  const msg: ChatMessage = {
-    id: randomUUID(),
-    conversationId: convId,
-    sender,
-    body,
-    createdAt: now(),
-    updatedAt: now(),
-    editedAt: null,
-    deletedAt: null,
-    reactions: {},
-  };
-  store.messages.push(msg);
-  conv.lastMessageAt = msg.createdAt;
-  conv.lastPreview = previewOf(body);
-  if (sender === "visitor") conv.unreadAdmin += 1;
-  else conv.unreadVisitor += 1;
-  await write(store);
-  return msg;
+  return mutate((store) => {
+    const conv = conversationOf(store, convId);
+    if (!conv) return null;
+    const ts = now();
+    const msg: ChatMessage = {
+      id: randomUUID(),
+      conversationId: convId,
+      sender,
+      body,
+      createdAt: ts,
+      updatedAt: ts,
+      editedAt: null,
+      deletedAt: null,
+      reactions: {},
+    };
+    store.messages.push(msg);
+    conv.lastMessageAt = msg.createdAt;
+    conv.lastPreview = previewOf(body);
+    if (sender === "visitor") conv.unreadAdmin += 1;
+    else conv.unreadVisitor += 1;
+    return msg;
+  });
 }
 
 export async function editMessage(
@@ -215,18 +236,18 @@ export async function editMessage(
   actor: ChatSender,
   body: string,
 ): Promise<ChatMessage | null> {
-  const store = await read();
-  const msg = messageOf(store, id);
-  if (!msg || msg.sender !== actor || msg.deletedAt) return null;
-  msg.body = body;
-  msg.editedAt = now();
-  msg.updatedAt = msg.editedAt;
-  const conv = conversationOf(store, msg.conversationId);
-  if (conv && conv.lastMessageAt === msg.createdAt) {
-    conv.lastPreview = previewOf(body);
-  }
-  await write(store);
-  return msg;
+  return mutate((store) => {
+    const msg = messageOf(store, id);
+    if (!msg || msg.sender !== actor || msg.deletedAt) return null;
+    msg.body = body;
+    msg.editedAt = now();
+    msg.updatedAt = msg.editedAt;
+    const conv = conversationOf(store, msg.conversationId);
+    if (conv && conv.lastMessageAt === msg.createdAt) {
+      conv.lastPreview = previewOf(body);
+    }
+    return msg;
+  });
 }
 
 /** Visitors delete only their own; admins may delete any message. */
@@ -234,20 +255,20 @@ export async function deleteMessage(
   id: string,
   actor: ChatSender,
 ): Promise<ChatMessage | null> {
-  const store = await read();
-  const msg = messageOf(store, id);
-  if (!msg || msg.deletedAt) return null;
-  if (actor === "visitor" && msg.sender !== "visitor") return null;
-  msg.deletedAt = now();
-  msg.updatedAt = msg.deletedAt;
-  msg.body = "";
-  msg.reactions = {};
-  const conv = conversationOf(store, msg.conversationId);
-  if (conv && conv.lastMessageAt === msg.createdAt) {
-    conv.lastPreview = "این پیام حذف شد";
-  }
-  await write(store);
-  return msg;
+  return mutate((store) => {
+    const msg = messageOf(store, id);
+    if (!msg || msg.deletedAt) return null;
+    if (actor === "visitor" && msg.sender !== "visitor") return null;
+    msg.deletedAt = now();
+    msg.updatedAt = msg.deletedAt;
+    msg.body = "";
+    msg.reactions = {};
+    const conv = conversationOf(store, msg.conversationId);
+    if (conv && conv.lastMessageAt === msg.createdAt) {
+      conv.lastPreview = "این پیام حذف شد";
+    }
+    return msg;
+  });
 }
 
 export async function toggleReaction(
@@ -256,19 +277,19 @@ export async function toggleReaction(
   emoji: string,
 ): Promise<ChatMessage | null> {
   if (!REACTION_EMOJIS.includes(emoji)) return null;
-  const store = await read();
-  const msg = messageOf(store, id);
-  if (!msg || msg.deletedAt) return null;
-  const reactions: ReactionMap = { ...msg.reactions };
-  const list = reactions[emoji] ?? [];
-  reactions[emoji] = list.includes(actor)
-    ? list.filter((s) => s !== actor)
-    : [...list, actor];
-  if (!reactions[emoji].length) delete reactions[emoji];
-  msg.reactions = reactions;
-  msg.updatedAt = now();
-  await write(store);
-  return msg;
+  return mutate((store) => {
+    const msg = messageOf(store, id);
+    if (!msg || msg.deletedAt) return null;
+    const reactions: ReactionMap = { ...msg.reactions };
+    const list = reactions[emoji] ?? [];
+    reactions[emoji] = list.includes(actor)
+      ? list.filter((s) => s !== actor)
+      : [...list, actor];
+    if (!reactions[emoji].length) delete reactions[emoji];
+    msg.reactions = reactions;
+    msg.updatedAt = now();
+    return msg;
+  });
 }
 
 export async function setTyping(
@@ -276,10 +297,10 @@ export async function setTyping(
   who: ChatSender,
   on: boolean,
 ): Promise<void> {
-  const store = await read();
-  const conv = conversationOf(store, convId);
-  if (!conv) return;
-  if (who === "visitor") conv.visitorTypingAt = on ? now() : null;
-  else conv.adminTypingAt = on ? now() : null;
-  await write(store);
+  await mutate((store) => {
+    const conv = conversationOf(store, convId);
+    if (!conv) return;
+    if (who === "visitor") conv.visitorTypingAt = on ? now() : null;
+    else conv.adminTypingAt = on ? now() : null;
+  });
 }

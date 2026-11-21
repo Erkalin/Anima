@@ -304,20 +304,16 @@ export function ContactWidget() {
             </span>
             <div className="widget-head-text">
               <p className="widget-title">آنیما</p>
-              <p className="widget-status">
-                <span
-                  className="widget-dot"
-                  data-off={tab === "assistant" && configured === false ? true : undefined}
-                  aria-hidden="true"
-                />
-                {tab === "assistant"
-                  ? configured === false
-                    ? "فعال‌سازی به‌زودی"
+              {tab === "assistant" ? (
+                <p className="widget-status">
+                  <span className="widget-dot" aria-hidden="true" />
+                  {configured === false
+                    ? "فعال"
                     : configured
                       ? "آنلاین · پاسخ فوری"
-                      : "دستیار هوشمند آنیما"
-                  : "تیم آنیما · پیام‌رسان‌ها"}
-              </p>
+                      : "دستیار هوشمند آنیما"}
+                </p>
+              ) : null}
             </div>
             {tab === "assistant" && (
               <button
