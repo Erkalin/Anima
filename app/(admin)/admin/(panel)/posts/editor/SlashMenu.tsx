@@ -48,6 +48,7 @@ export function SlashMenu({
         aria-selected={i === index}
         onMouseEnter={() => onHover(i)}
         onMouseDown={(e) => e.preventDefault()}
+        onPointerDown={(e) => e.preventDefault()}
         onClick={() => onPick(def)}
       >
         <span className="slash-icon">

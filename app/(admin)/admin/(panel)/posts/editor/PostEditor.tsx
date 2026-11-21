@@ -384,9 +384,11 @@ export function PostEditor({
 
     const items = searchBlocks(query);
     const { x: cx, y: cy, line } = caretXY(ta, at);
+    const menuW = Math.min(MENU_W, window.innerWidth - 16);
+    const menuH = Math.min(MENU_H, Math.floor(window.innerHeight * 0.55));
     let y = cy + 4;
-    if (y + MENU_H > window.innerHeight - 8) y = cy - line - MENU_H - 4;
-    const pos = clampToViewport(cx, y, MENU_W, MENU_H);
+    if (y + menuH > window.innerHeight - 8) y = cy - line - menuH - 4;
+    const pos = clampToViewport(cx, y, menuW, menuH);
     setSlash((old) => ({
       from: at,
       query,
@@ -404,7 +406,7 @@ export function PostEditor({
       if (el instanceof HTMLElement && el.closest(".slash")) return;
       setSlash(null);
     };
-    const onDown = (e: MouseEvent) => {
+    const onDown = (e: PointerEvent) => {
       const el = e.target;
       if (el instanceof HTMLElement && (el.closest(".slash") || el === areaRef.current))
         return;
@@ -412,11 +414,11 @@ export function PostEditor({
     };
     window.addEventListener("scroll", away, true);
     window.addEventListener("resize", away);
-    window.addEventListener("mousedown", onDown);
+    window.addEventListener("pointerdown", onDown);
     return () => {
       window.removeEventListener("scroll", away, true);
       window.removeEventListener("resize", away);
-      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("pointerdown", onDown);
     };
   }, [slash]);
 
@@ -789,7 +791,17 @@ export function PostEditor({
         <button
           className={`icon-btn${railOpen ? " is-on" : ""}`}
           type="button"
-          onClick={() => setRailOpen((v) => !v)}
+          onClick={() => {
+            const next = !railOpen;
+            setRailOpen(next);
+            if (next && window.innerWidth <= 1248) {
+              requestAnimationFrame(() => {
+                document
+                  .getElementById("editor-settings")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              });
+            }
+          }}
           title="تنظیمات نوشته"
           aria-label="تنظیمات نوشته"
           aria-pressed={railOpen}
@@ -848,7 +860,7 @@ export function PostEditor({
                   </button>
                 ))}
               </div>
-              <span className="muted" style={{ marginInlineStart: "auto" }}>
+              <span className="muted editor-mode-hints">
                 <span className="kbd-hint">/</span> منوی بلوک ·{" "}
                 <span className="kbd-hint">Ctrl+S</span> ذخیره ·{" "}
                 <span className="kbd-hint">Ctrl+Enter</span> انتشار
@@ -981,7 +993,14 @@ export function PostEditor({
                     onChange={onChange}
                     onKeyDown={onKeyDown}
                     onPaste={onPaste}
-                    onBlur={() => setSlash(null)}
+                    onBlur={(e) => {
+                      const related = e.relatedTarget as HTMLElement | null;
+                      if (related?.closest(".slash")) return;
+                      window.setTimeout(() => {
+                        if (document.activeElement?.closest(".slash")) return;
+                        setSlash(null);
+                      }, 140);
+                    }}
                   />
                 </div>
               ) : null}

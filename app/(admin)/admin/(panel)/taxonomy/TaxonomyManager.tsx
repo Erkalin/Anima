@@ -256,7 +256,7 @@ export function TaxonomyManager({
             برچسب‌ها آزادند؛ هنگام نوشتن هم می‌توانید بسازید.
           </p>
           <div className="admin-top-spacer" />
-          <div style={{ display: "flex", gap: "0.4rem" }}>
+          <div className="inline-add">
             <input
               className="input"
               value={newTag}
@@ -269,7 +269,6 @@ export function TaxonomyManager({
               }}
               placeholder="نامِ برچسب"
               aria-label="نام برچسب تازه"
-              style={{ width: "12rem" }}
             />
             <button
               className="btn btn-ghost btn-sm"

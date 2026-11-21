@@ -241,11 +241,10 @@ export function PostsTable({
               />
             </label>
             <select
-              className="select"
+              className="select select-compact"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               aria-label="دسته"
-              style={{ width: "auto", minWidth: "9rem" }}
             >
               <option value="">همهٔ دسته‌ها</option>
               {categories.map((c) => (
@@ -255,11 +254,10 @@ export function PostsTable({
               ))}
             </select>
             <select
-              className="select"
+              className="select select-compact"
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
               aria-label="ترتیب"
-              style={{ width: "auto", minWidth: "9rem" }}
             >
               {(Object.keys(SORT_LABEL) as SortKey[]).map((k) => (
                 <option key={k} value={k}>

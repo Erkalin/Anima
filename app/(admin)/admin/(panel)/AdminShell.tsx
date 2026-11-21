@@ -47,12 +47,12 @@ export function AdminTop({
       >
         <Icon name="menu" />
       </button>
-      <div>
+      <div className="admin-top-title">
         <h1>{title}</h1>
         {sub ? <p className="admin-top-sub">{sub}</p> : null}
       </div>
       <div className="admin-top-spacer" />
-      {children}
+      {children ? <div className="admin-top-actions">{children}</div> : null}
     </div>
   );
 }
@@ -115,21 +115,30 @@ export function AdminShell({
             if ((e.target as HTMLElement).closest("a")) setOpen(false);
           }}
         >
-          <Link className="admin-brand" href="/admin">
-            <span className="admin-brand-mark">
-              <Icon name="note" />
-            </span>
-            <span className="admin-brand-text">
-              <span className="admin-brand-name">{brand}</span>
-              <span className="admin-brand-sub">اتاق مدیریت</span>
-            </span>
-          </Link>
+          <div className="admin-brand-row">
+            <Link className="admin-brand" href="/admin">
+              <span className="admin-brand-mark">
+                <Icon name="note" />
+              </span>
+              <span className="admin-brand-text">
+                <span className="admin-brand-name">{brand}</span>
+                <span className="admin-brand-sub">اتاق مدیریت</span>
+              </span>
+            </Link>
+            <button
+              type="button"
+              className="icon-btn admin-side-close"
+              onClick={() => setOpen(false)}
+              aria-label="بستن فهرست"
+            >
+              <Icon name="x" />
+            </button>
+          </div>
 
           <nav className="admin-nav" aria-label="فهرست مدیریت">
             <Link
-              className="btn btn-brass btn-sm"
+              className="btn btn-brass btn-sm admin-nav-cta"
               href="/admin/posts/new"
-              style={{ margin: "0.15rem 0.15rem 0.5rem" }}
             >
               <Icon name="plus" /> نوشتهٔ تازه
             </Link>

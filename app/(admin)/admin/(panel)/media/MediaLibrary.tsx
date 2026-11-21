@@ -223,7 +223,7 @@ export function MediaLibrary({
             ))}
           </div>
           <div className="admin-top-spacer" />
-          <label className="search" style={{ maxWidth: "20rem" }}>
+          <label className="search media-search">
             <Icon name="search" />
             <input
               className="input"

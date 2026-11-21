@@ -194,15 +194,12 @@ export default async function OverviewPage() {
                 />
               ))}
             </div>
-            <div className="row-between" style={{ marginTop: "0.5rem" }}>
+            <div className="spark-labels">
               {buckets.map((b, i) => (
                 <span
                   key={b.key}
                   className="muted"
                   style={{
-                    flex: 1,
-                    textAlign: "center",
-                    fontSize: "0.66rem",
                     opacity: i % 2 === 0 ? 1 : 0.35,
                   }}
                 >

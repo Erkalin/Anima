@@ -102,7 +102,7 @@ export function SettingsRail({
   const suggestions = tags.filter((t) => !post.tags.includes(t.name));
 
   return (
-    <aside className="editor-side" aria-label="تنظیمات نوشته">
+    <aside id="editor-settings" className="editor-side" aria-label="تنظیمات نوشته">
       <Accordion title="انتشار" icon="publish">
         <div className="field">
           <label className="label" htmlFor="p-status">
