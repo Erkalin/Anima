@@ -71,6 +71,50 @@ export function ArrowIcon({ className }: P) {
   );
 }
 
+/** RTL "back": points right, mirroring ArrowIcon. */
+export function BackIcon({ className }: P) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ className }: P) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+export function TrashIcon({ className }: P) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-8 0 1 13h8l1-13M10 11v6M14 11v6" />
+    </svg>
+  );
+}
+
+export function EditIcon({ className }: P) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17v3z" />
+      <path d="m13.5 6.5 3 3" />
+    </svg>
+  );
+}
+
+export function SmileIcon({ className }: P) {
+  return (
+    <svg {...base} className={className}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.5 14.5s1.2 1.8 3.5 1.8 3.5-1.8 3.5-1.8M9 9.5h.01M15 9.5h.01" />
+    </svg>
+  );
+}
+
 export function ResetIcon({ className }: P) {
   return (
     <svg {...base} className={className}>

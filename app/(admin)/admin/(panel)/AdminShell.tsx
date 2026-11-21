@@ -14,13 +14,14 @@ import type { SessionAdmin } from "@/lib/types";
 import { toFa } from "@/lib/utils";
 import { Icon } from "@/app/components/admin/Icons";
 
-type Counts = { posts: number; drafts: number; media: number };
+type Counts = { posts: number; drafts: number; media: number; inbox: number };
 
 const NavCtx = createContext<{ toggle: () => void }>({ toggle: () => {} });
 
 const NAV = [
   { href: "/admin", label: "نمای کلی", icon: "dashboard" },
   { href: "/admin/posts", label: "نوشته‌ها", icon: "posts" },
+  { href: "/admin/inbox", label: "گفتگوها", icon: "inbox" },
   { href: "/admin/media", label: "رسانه‌ها", icon: "media" },
   { href: "/admin/taxonomy", label: "دسته و برچسب", icon: "taxonomy" },
   { href: "/admin/settings", label: "تنظیمات", icon: "settings" },
@@ -73,10 +74,6 @@ export function AdminShell({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -93,7 +90,11 @@ export function AdminShell({
       ? counts.posts
       : href === "/admin/media"
         ? counts.media
-        : null;
+        : href === "/admin/inbox"
+          ? counts.inbox > 0
+            ? counts.inbox
+            : null
+          : null;
 
   return (
     <NavCtx value={{ toggle: () => setOpen((v) => !v) }}>
@@ -106,7 +107,14 @@ export function AdminShell({
           />
         ) : null}
 
-        <aside className="admin-side">
+        <aside
+          className="admin-side"
+          onClickCapture={(e) => {
+            // Close the drawer on any navigation click (event handler, not
+            // a pathname effect — avoids a cascading render).
+            if ((e.target as HTMLElement).closest("a")) setOpen(false);
+          }}
+        >
           <Link className="admin-brand" href="/admin">
             <span className="admin-brand-mark">
               <Icon name="note" />

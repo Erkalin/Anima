@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { requireAdmin } from "@/lib/auth/dal";
 import { getDb, storageMode } from "@/lib/db";
+import { unreadTotal } from "@/lib/chat";
 import { AdminShell } from "./AdminShell";
 import { ToastHost } from "@/app/components/admin/ui";
 
@@ -13,6 +14,7 @@ export default async function PanelLayout({
 }) {
   const admin = await requireAdmin();
   const data = await getDb();
+  const inbox = await unreadTotal();
 
   return (
     <AdminShell
@@ -23,6 +25,7 @@ export default async function PanelLayout({
         posts: data.posts.length,
         drafts: data.posts.filter((p) => p.status === "draft").length,
         media: data.media.length,
+        inbox,
       }}
     >
       <ToastHost>{children}</ToastHost>

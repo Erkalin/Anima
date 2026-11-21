@@ -17,6 +17,8 @@ import {
 } from "../data";
 import { BaleIcon, TelegramIcon } from "./Art";
 import { ArrowIcon, NoteMark, SendIcon } from "./studio/icons";
+import { LiveChat, LIVE_STORE_KEY } from "./LiveChat";
+import { toFa } from "@/lib/utils";
 
 type ChatMsg = {
   id: number;
@@ -103,6 +105,8 @@ export function ContactWidget() {
   const [tab, setTab] = useState<"assistant" | "team">("assistant");
   const [msgs, setMsgs] = useState<ChatMsg[]>([WELCOME]);
   const [configured, setConfigured] = useState<boolean | null>(null);
+  const [live, setLive] = useState(false);
+  const [liveUnread, setLiveUnread] = useState(0);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -141,6 +145,33 @@ export function ContactWidget() {
       .then((d) => setConfigured(Boolean(d.configured)))
       .catch(() => setConfigured(null));
   }, [open, configured]);
+
+  // Closed-widget badge: lightweight unread probe every 12s.
+  useEffect(() => {
+    if (open) return;
+    let stop = false;
+    async function probe() {
+      try {
+        const raw = window.localStorage.getItem(LIVE_STORE_KEY);
+        if (!raw) return;
+        const token = (JSON.parse(raw) as { token?: string }).token;
+        if (!token) return;
+        const res = await fetch("/api/livechat?meta=1", {
+          headers: { "x-visitor-token": token },
+        });
+        const d = await res.json();
+        if (!stop && d.started) setLiveUnread(Number(d.unread) || 0);
+      } catch {
+        /* offline — badge stays as-is */
+      }
+    }
+    void probe();
+    const t = window.setInterval(probe, 12000);
+    return () => {
+      stop = true;
+      window.clearInterval(t);
+    };
+  }, [open]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -256,6 +287,14 @@ export function ContactWidget() {
     <div className="contact-fab" ref={rootRef} data-open={open || undefined}>
       {open && (
         <div className="contact-widget" role="dialog" aria-label="گفتگو و تماس با آنیما">
+          {live ? (
+            <LiveChat
+              onBack={() => setLive(false)}
+              onClose={close}
+              onUnread={setLiveUnread}
+            />
+          ) : (
+            <>
           <div className="widget-head">
             <span className="widget-avatar" aria-hidden="true">
               <NoteMark />
@@ -387,6 +426,19 @@ export function ContactWidget() {
                 <p className="team-sub">برای هماهنگی کلاس‌ها و پرسش‌ها پیام بدهید.</p>
               </div>
 
+              <button type="button" className="live-launch" onClick={() => setLive(true)}>
+                <span className="live-launch-pulse" aria-hidden="true" />
+                <span className="live-launch-text">
+                  <span className="live-launch-title">گفتگوی زنده با تیم</span>
+                  <span className="live-launch-sub">همین‌جا پیام بده؛ تیم پاسخ می‌دهد</span>
+                </span>
+                {liveUnread > 0 ? (
+                  <span className="live-launch-badge">{toFa(liveUnread)}</span>
+                ) : (
+                  <ArrowIcon className="live-launch-arrow" />
+                )}
+              </button>
+
               <div className="team-channels">
                 {teamChannels.map((c) => (
                   <a
@@ -420,6 +472,8 @@ export function ContactWidget() {
           )}
 
           <p className="widget-foot">آنیما — آموزش پیانو و ویولن</p>
+            </>
+          )}
         </div>
       )}
 
@@ -432,6 +486,11 @@ export function ContactWidget() {
         onClick={toggle}
       >
         <span className="contact-fab-ring" aria-hidden="true" />
+        {liveUnread > 0 ? (
+          <span className="fab-badge" aria-hidden="true">
+            {toFa(liveUnread)}
+          </span>
+        ) : null}
         <span className="contact-fab-glyph">{open ? <CloseGlyph /> : <ChatGlyph />}</span>
         <span className="contact-fab-tip" aria-hidden="true">
           گفتگو با ما

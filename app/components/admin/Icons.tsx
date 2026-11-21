@@ -1,6 +1,25 @@
 import type { ReactNode } from "react";
 
 const P: Record<string, ReactNode> = {
+  inbox: (
+    <>
+      <path d="M3.5 13.5 5.8 5.4a1.6 1.6 0 0 1 1.5-1.2h9.4a1.6 1.6 0 0 1 1.5 1.2l2.3 8.1" />
+      <path d="M3.5 13.5h4.6l1.2 2.2h5.4l1.2-2.2h4.6v4.7a1.8 1.8 0 0 1-1.8 1.8H5.3a1.8 1.8 0 0 1-1.8-1.8z" />
+    </>
+  ),
+  send: <path d="M20.5 3.5 10 14M20.5 3.5l-6.8 17-3.7-6.5L3.5 10.3z" />,
+  smile: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M8.7 14.2s1.1 1.7 3.3 1.7 3.3-1.7 3.3-1.7M9.2 9.6h.01M14.8 9.6h.01" />
+    </>
+  ),
+  archive: (
+    <>
+      <rect x="3.5" y="4" width="17" height="4.5" rx="1" />
+      <path d="M5 8.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V8.5M10 12.5h4" />
+    </>
+  ),
   dashboard: (
     <>
       <rect x="3" y="3" width="7.5" height="8.5" rx="1.5" />
