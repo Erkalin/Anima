@@ -63,11 +63,9 @@ function pop() {
 
 export function LiveChat({
   onBack,
-  onClose,
   onUnread,
 }: {
   onBack: () => void;
-  onClose: () => void;
   onUnread: (n: number) => void;
 }) {
   // Only ever mounted client-side (widget open + live mode), so reading
@@ -382,9 +380,6 @@ export function LiveChat({
             {adminTyping ? "تیم در حال نوشتن…" : adminOnline ? "تیم آنلاین است" : "تیم به‌زودی پاسخ می‌دهد"}
           </p>
         </div>
-        <button type="button" className="widget-icon-btn" onClick={onClose} aria-label="بستن">
-          <CloseIcon />
-        </button>
       </div>
 
       <div className="live-name-row">

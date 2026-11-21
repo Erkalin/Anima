@@ -122,7 +122,11 @@ export function ContactWidget() {
     if (!loadedRef.current) {
       loadedRef.current = true;
       const stored = loadChat();
-      nextId.current = Math.max(0, ...stored.map((m) => m.id)) + 1;
+      const maxId = stored.reduce(
+        (acc, m) => (typeof m.id === "number" && Number.isFinite(m.id) ? Math.max(acc, m.id) : acc),
+        0,
+      );
+      nextId.current = maxId + 1;
       setMsgs(stored);
     }
     setOpen((v) => !v);
@@ -290,7 +294,6 @@ export function ContactWidget() {
           {live ? (
             <LiveChat
               onBack={() => setLive(false)}
-              onClose={close}
               onUnread={setLiveUnread}
             />
           ) : (
@@ -327,14 +330,6 @@ export function ContactWidget() {
                 <TrashGlyph />
               </button>
             )}
-            <button
-              type="button"
-              className="widget-icon-btn"
-              onClick={close}
-              aria-label="بستن"
-            >
-              <CloseGlyph />
-            </button>
           </div>
 
           <div className="widget-tabs" role="tablist" aria-label="بخش‌های گفتگو">

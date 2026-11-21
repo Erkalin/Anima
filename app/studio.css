@@ -2829,10 +2829,10 @@ textarea.compose-bubble:focus-visible {
   position: fixed;
   right: clamp(1rem, 3vw, 1.6rem);
   bottom: clamp(1rem, 3vw, 1.6rem);
-  z-index: 60;
+  z-index: 95;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.8rem;
 }
 
@@ -2856,6 +2856,7 @@ textarea.compose-bubble:focus-visible {
   display: grid;
   place-items: center;
   cursor: pointer;
+  touch-action: manipulation;
   box-shadow:
     0 12px 32px -10px color-mix(in oklab, var(--brass) 65%, transparent),
     0 4px 14px rgba(0, 0, 0, 0.35);
@@ -2913,13 +2914,26 @@ textarea.compose-bubble:focus-visible {
   pointer-events: none;
 }
 
+.contact-fab-tip::after {
+  content: "";
+  position: absolute;
+  top: -0.35rem;
+  bottom: -0.35rem;
+  left: 100%;
+  width: 0.85rem;
+}
+
 .contact-fab-btn:hover .contact-fab-tip,
 .contact-fab-btn:focus-visible .contact-fab-tip {
   opacity: 1;
   transform: translateX(0);
+  pointer-events: auto;
 }
 
-.contact-fab[data-open] .contact-fab-tip { opacity: 0; }
+.contact-fab[data-open] .contact-fab-tip {
+  opacity: 0;
+  pointer-events: none;
+}
 
 .contact-widget {
   width: min(22.5rem, calc(100vw - 1.8rem));
