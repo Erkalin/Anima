@@ -57,7 +57,6 @@
 html {
   -webkit-text-size-adjust: 100%;
   color-scheme: dark;
-  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -72,6 +71,7 @@ body {
   color: var(--ink);
   font-size: 1.0625rem;
   line-height: 1.95;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -849,7 +849,7 @@ a.instrument:hover .instrument-name {
     display: flex;
   }
 
-  body {
+  body:has(.mobile-cta) {
     padding-bottom: calc(3.6rem + env(safe-area-inset-bottom));
   }
 }
