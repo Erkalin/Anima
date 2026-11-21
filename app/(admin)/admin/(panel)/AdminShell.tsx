@@ -13,6 +13,7 @@ import { logoutAction } from "@/lib/auth/actions";
 import type { SessionAdmin } from "@/lib/types";
 import { toFa } from "@/lib/utils";
 import { Icon } from "@/app/components/admin/Icons";
+import { ThemeSwitcher } from "@/app/components/ThemeSwitcher";
 
 type Counts = { posts: number; drafts: number; media: number; inbox: number };
 
@@ -53,6 +54,9 @@ export function AdminTop({
       </div>
       <div className="admin-top-spacer" />
       {children ? <div className="admin-top-actions">{children}</div> : null}
+      <div className="admin-top-theme">
+        <ThemeSwitcher />
+      </div>
     </div>
   );
 }

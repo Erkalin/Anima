@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { loginAction, type LoginState } from "@/lib/auth/actions";
 import { Icon } from "@/app/components/admin/Icons";
+import { ThemeSwitcher } from "@/app/components/ThemeSwitcher";
 
 const initial: LoginState = { error: null, email: "" };
 
@@ -23,6 +24,9 @@ export function LoginForm({
 
   return (
     <div className="login">
+      <div className="login-theme">
+        <ThemeSwitcher />
+      </div>
       <svg
         className="login-staff"
         viewBox="0 0 1200 200"

@@ -335,6 +335,18 @@
   margin-inline-start: auto;
 }
 
+.admin-top-theme {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.admin-top-theme .theme-toggle {
+  min-height: 2.35rem;
+  min-width: 2.35rem;
+  padding-inline: 0.55rem;
+}
+
 .admin-body {
   padding: clamp(1rem, 2.5vw, 1.75rem);
   display: flex;
@@ -1188,10 +1200,6 @@
   min-height: 0;
 }
 
-.editor-surface[data-mode="split"] {
-  grid-template-columns: 1fr 1fr;
-}
-
 .editor-pane {
   position: relative;
   min-width: 0;
@@ -1227,19 +1235,6 @@
 
 .editor-area::placeholder {
   color: color-mix(in srgb, var(--ink) 25%, transparent);
-}
-
-.editor-area[data-mode="markdown"] {
-  font-family: var(--mono);
-  font-size: 0.875rem;
-  line-height: 1.95;
-  unicode-bidi: plaintext;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0 1.7rem,
-      color-mix(in srgb, var(--ink) 2.2%, transparent) 1.7rem 3.4rem
-    );
 }
 
 .editor-preview {
@@ -1995,6 +1990,13 @@
     var(--wood);
 }
 
+.login-theme {
+  position: absolute;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 5;
+}
+
 .login-staff {
   position: absolute;
   inset-inline: -5%;
@@ -2380,15 +2382,6 @@
     background: var(--scrim);
   }
 
-  .editor-surface[data-mode="split"] {
-    grid-template-columns: minmax(0, 1fr);
-    height: auto;
-  }
-
-  .editor-surface[data-mode="split"] .editor-pane {
-    height: clamp(14rem, 36dvh, 22rem);
-  }
-
   .editor-pane + .editor-pane {
     border-inline-start: 0;
     border-top: 1px solid var(--oak);
@@ -2400,7 +2393,12 @@
     display: none;
   }
 
+  .admin-top-theme {
+    margin-inline-start: auto;
+  }
+
   .admin-top-actions {
+    order: 3;
     width: 100%;
     margin-inline-start: 0;
     gap: 0.35rem;
@@ -2530,28 +2528,24 @@
   .editor-modes .seg {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .editor-modes .seg button {
     justify-content: center;
-    padding-inline: 0.35rem;
-    font-size: 0.74rem;
-    gap: 0.25rem;
-    min-height: 2.1rem;
+    padding-inline: 0.5rem;
+    font-size: 0.8rem;
+    gap: 0.3rem;
+    min-height: 2.15rem;
   }
 
   .editor-modes .seg button svg {
-    width: 0.85rem;
-    height: 0.85rem;
+    width: 0.9rem;
+    height: 0.9rem;
   }
 
   .editor-surface {
     height: clamp(20rem, 54dvh, 38rem);
-  }
-
-  .editor-surface[data-mode="split"] {
-    height: auto;
   }
 
   .editor-surface[data-mode="preview"] {
@@ -2633,12 +2627,6 @@
   }
 }
 
-@media (max-width: 28rem) {
-  .editor-modes .seg {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 /* ---------- live inbox ---------- */
 
 .inbox {
@@ -2657,7 +2645,7 @@
   flex-direction: column;
   min-height: 0;
   border-inline-end: 1px solid color-mix(in srgb, var(--brass) 20%, transparent);
-  background: color-mix(in srgb, var(--wood) 65%, #000);
+  background: color-mix(in srgb, var(--paper-2) 72%, var(--wood));
 }
 
 .inbox-list-head {
@@ -2720,9 +2708,13 @@
   font-style: normal;
   font-size: 0.66rem;
   font-weight: 900;
-  background: color-mix(in srgb, #000 25%, transparent);
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
   border-radius: 1rem;
   padding: 0 0.35rem;
+}
+
+.inbox-filter[data-active] i {
+  background: color-mix(in srgb, var(--on-accent) 18%, transparent);
 }
 
 .inbox-rows { flex: 1; overflow-y: auto; padding: 0.45rem; scrollbar-width: thin; }
@@ -2864,7 +2856,7 @@
 .inbox-rename .icon-btn svg { width: 0.85rem; height: 0.85rem; }
 
 .inbox-who span { font-size: 0.7rem; color: var(--ink-soft); }
-.inbox-who span[data-online] { color: #4ade80; }
+.inbox-who span[data-online] { color: var(--verdigris); }
 
 .inbox-thread-actions { margin-inline-start: auto; display: flex; gap: 0.3rem; }
 

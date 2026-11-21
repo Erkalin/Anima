@@ -67,12 +67,10 @@ import { SettingsRail } from "./SettingsRail";
 import { SlashMenu } from "./SlashMenu";
 import { Toolbar } from "./Toolbar";
 
-type Mode = "write" | "markdown" | "split" | "preview";
+type Mode = "write" | "preview";
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: "write", label: "نوشتن", icon: "edit" },
-  { id: "markdown", label: "مارک‌داون", icon: "code" },
-  { id: "split", label: "دوپاره", icon: "columns" },
   { id: "preview", label: "پیش‌نمایش", icon: "eye" },
 ];
 
@@ -750,8 +748,8 @@ export function PostEditor({
     maxWidth: "var(--md-measure)",
   } as CSSProperties;
 
-  const showArea = mode !== "preview";
-  const showPreview = mode === "split" || mode === "preview";
+  const showArea = mode === "write";
+  const showPreview = mode === "preview";
 
   return (
     <>
@@ -973,7 +971,7 @@ export function PostEditor({
                   <textarea
                     ref={areaRef}
                     className="editor-area"
-                    data-mode={mode === "write" ? "write" : "markdown"}
+                    data-mode="write"
                     dir="auto"
                     spellCheck={false}
                     value={post.content}
