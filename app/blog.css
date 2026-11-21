@@ -1247,8 +1247,7 @@
 .md-metro-toggle:hover { background: var(--brass-hi); }
 .md-metro[data-running] .md-metro-toggle { background: color-mix(in oklab, var(--copper) 68%, #000); border-color: color-mix(in oklab, var(--copper) 68%, #000); color: var(--on-hot); }
 
-.md-metro-tap,
-.md-metro-mute {
+.md-metro-tap {
   min-height: 2.4rem;
   padding-inline: 0.9rem;
   border-radius: 7px;
@@ -1261,9 +1260,7 @@
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.md-metro-tap:hover,
-.md-metro-mute:hover { background: var(--paper-3); border-color: var(--brass); }
-.md-metro-mute[aria-pressed="true"] { color: var(--copper); border-color: var(--copper); }
+.md-metro-tap:hover { background: var(--paper-3); border-color: var(--brass); }
 
 .md-metro-field {
   display: flex;

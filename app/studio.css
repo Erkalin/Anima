@@ -228,78 +228,9 @@
   transform: none;
 }
 
-/* ---------- global sound switch ---------- */
-.sound-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  min-height: 2.5rem;
-  padding-inline: 0.7rem;
-  border: 1px solid var(--hair-2);
-  border-radius: 99px;
-  background: color-mix(in srgb, var(--ink) 4%, transparent);
-  color: var(--ink);
-  font: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-}
-
-.sound-toggle:hover {
-  border-color: color-mix(in srgb, var(--glow-rosin) 60%, transparent);
-  background: color-mix(in srgb, var(--glow-rosin) 10%, transparent);
-}
-
-.sound-toggle[data-muted] {
-  color: var(--ink-soft);
-  border-color: var(--hair);
-}
-
-.sound-toggle[data-muted]:hover {
-  border-color: color-mix(in srgb, var(--glow-copper) 55%, transparent);
-  background: color-mix(in srgb, var(--glow-copper) 10%, transparent);
-}
-
-.sound-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 0.95rem;
-}
-
-.sound-bars i {
-  width: 3px;
-  border-radius: 2px;
-  background: var(--glow-rosin);
-  height: 40%;
-  animation: sound-bar 900ms ease-in-out infinite alternate;
-}
-
-.sound-bars i:nth-child(2) { height: 100%; animation-delay: 120ms; }
-.sound-bars i:nth-child(3) { height: 62%; animation-delay: 240ms; }
-.sound-bars i:nth-child(4) { height: 82%; animation-delay: 360ms; }
-
-.sound-toggle[data-muted] .sound-bars i {
-  animation: none;
-  height: 3px;
-  background: var(--ink-soft);
-}
-
-.sound-off-note {
-  font-size: 0.75rem;
-  color: var(--ink-soft);
-}
-
-@keyframes sound-bar {
-  from { transform: scaleY(0.35); }
-  to { transform: scaleY(1); }
-}
-
 @media (max-width: 62rem) {
   .header-cta .header-cta-text { display: none; }
   .header-cta { padding-inline: 0.75rem; }
-  .sound-text { display: none; }
-  .sound-toggle { padding-inline: 0.6rem; }
 }
 
 @media (max-width: 47.99rem) {
@@ -2689,8 +2620,7 @@ textarea.compose-bubble:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ticker-track,
-  .sound-bars i {
+  .ticker-track {
     animation: none !important;
   }
 

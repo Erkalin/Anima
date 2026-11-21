@@ -507,21 +507,9 @@ html[data-theme="banafsheh"] {
   border: 1px solid var(--hair-2, var(--edge));
 }
 
-.theme-opt-copy {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.4;
-}
-
 .theme-opt-name {
   font-size: 0.92rem;
   font-weight: 700;
-}
-
-.theme-opt-note {
-  font-size: 0.72rem;
-  color: var(--ink-soft);
 }
 
 .theme-opt-check {

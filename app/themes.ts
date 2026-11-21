@@ -4,7 +4,6 @@ export const THEMES = [
   {
     id: "abnus",
     name: "آبنوس",
-    note: "چوبِ تیره و برنج",
     paper: "#17120e",
     accent: "#c08a3e",
     ink: "#f1e7d7",
@@ -12,7 +11,6 @@ export const THEMES = [
   {
     id: "lajvard",
     name: "لاجورد",
-    note: "شبِ لاجوردی و طلا",
     paper: "#101425",
     accent: "#d4a94e",
     ink: "#eceaf2",
@@ -20,7 +18,6 @@ export const THEMES = [
   {
     id: "arghavan",
     name: "ارغوان",
-    note: "شکوفه‌ی ارغوان",
     paper: "#1b101b",
     accent: "#d678a0",
     ink: "#f2e9ee",
@@ -28,7 +25,6 @@ export const THEMES = [
   {
     id: "firuzeh",
     name: "فیروزه",
-    note: "کاشیِ فیروزه‌ای",
     paper: "#0c1b1b",
     accent: "#52c0b0",
     ink: "#e8f0ec",
@@ -36,7 +32,6 @@ export const THEMES = [
   {
     id: "sahargah",
     name: "سحرگاه",
-    note: "کاغذِ صبحگاهی",
     paper: "#f5ede0",
     accent: "#965222",
     ink: "#2a1e14",
@@ -44,7 +39,6 @@ export const THEMES = [
   {
     id: "nilufar",
     name: "نیلوفر",
-    note: "آسمانِ صبح و لاجوردِ روشن",
     paper: "#f1f5fb",
     accent: "#1d4ed8",
     ink: "#111c33",
@@ -52,7 +46,6 @@ export const THEMES = [
   {
     id: "golab",
     name: "گلاب",
-    note: "مرمرِ گل‌بهی و یاقوت",
     paper: "#fbf1f3",
     accent: "#b82952",
     ink: "#2d121c",
@@ -60,7 +53,6 @@ export const THEMES = [
   {
     id: "bahar",
     name: "بهار",
-    note: "بهارنارنج و زمردِ روشن",
     paper: "#eef6f0",
     accent: "#0f766e",
     ink: "#11281d",
@@ -68,7 +60,6 @@ export const THEMES = [
   {
     id: "zaferan",
     name: "زعفران",
-    note: "عاجِ آفتابی و کهربا",
     paper: "#fcf6e8",
     accent: "#b84a0b",
     ink: "#2c1d09",
@@ -76,7 +67,6 @@ export const THEMES = [
   {
     id: "banafsheh",
     name: "بنفشه",
-    note: "صدفِ یاسی و ارغوانِ روشن",
     paper: "#f5f1fb",
     accent: "#6d28d9",
     ink: "#211536",

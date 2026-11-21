@@ -114,10 +114,7 @@ export function ThemeSwitcher() {
                   background: `linear-gradient(135deg, ${t.paper} 0% 50%, ${t.accent} 50% 100%)`,
                 }}
               />
-              <span className="theme-opt-copy">
-                <span className="theme-opt-name">{t.name}</span>
-                <span className="theme-opt-note">{t.note}</span>
-              </span>
+              <span className="theme-opt-name">{t.name}</span>
               <CheckIcon className="theme-opt-check" />
             </button>
           ))}

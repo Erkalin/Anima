@@ -1,16 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Instrument } from "@/app/data";
-import { audio, bow, midiToFreq, now, strike, type NoteHandle } from "@/lib/audio/engine";
-import { useSound } from "./Sound";
+import { audio, audioSupported, bow, midiToFreq, now, strike, type NoteHandle } from "@/lib/audio/engine";
 import { PlayIcon, StopIcon } from "./icons";
 
 const PIANO_MOTIF = [64, 63, 64, 63, 64, 59, 62, 60, 57];
 const VIOLIN_MOTIF = [69, 71, 72, 76];
 
 export function ListenButton({ instrument }: { instrument: Instrument }) {
-  const { muted, supported } = useSound();
+  const supported = useSyncExternalStore(() => () => {}, audioSupported, () => true);
   const [playing, setPlaying] = useState(false);
   const timers = useRef<number[]>([]);
   const handles = useRef<NoteHandle[]>([]);
@@ -84,13 +83,10 @@ export function ListenButton({ instrument }: { instrument: Instrument }) {
         className="chip-btn"
         data-on={playing || undefined}
         onClick={playing ? halt : play}
-        disabled={muted}
-        title={muted ? "صدا خاموش است، از بالای صفحه روشنش کن" : undefined}
       >
         {playing ? <StopIcon /> : <PlayIcon />}
         {playing ? "توقف" : "صدایش را بشنو"}
       </button>
-      {muted && <span className="deck-note">صدا خاموش است.</span>}
     </span>
   );
 }

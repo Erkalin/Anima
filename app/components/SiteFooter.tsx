@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { brand, telegramHref, telegramPending } from "../data";
 import { NoteMark } from "./studio/icons";
-import { SoundToggle } from "./studio/Sound";
 
 export function SiteFooter() {
   return (
@@ -49,9 +48,6 @@ export function SiteFooter() {
       <div className="wrap footer-bottom">
         <span>
           {brand} · ۱۴۰۴
-        </span>
-        <span>
-          <SoundToggle compact />
         </span>
       </div>
     </footer>

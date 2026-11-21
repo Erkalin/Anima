@@ -13,7 +13,7 @@ import {
 } from "react";
 import type { ChatMessage } from "@/lib/chat/types";
 import { MAX_BODY, MAX_NAME, REACTION_EMOJIS } from "@/lib/chat/types";
-import { isMuted, midiToFreq, strike } from "@/lib/audio/engine";
+import { midiToFreq, strike } from "@/lib/audio/engine";
 import { cx, faDate, toFa } from "@/lib/utils";
 import {
   BackIcon,
@@ -53,7 +53,6 @@ function dayLabel(iso: string): string {
 }
 
 function pop() {
-  if (isMuted()) return;
   strike({ freq: midiToFreq(88), dur: 0.45, gain: 0.09, room: 0.25 });
 }
 

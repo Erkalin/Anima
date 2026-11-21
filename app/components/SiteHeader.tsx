@@ -6,7 +6,6 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { brand } from "../data";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { NoteMark, SendIcon } from "./studio/icons";
-import { SoundToggle } from "./studio/Sound";
 
 const links = [
   { href: "/", label: "خانه" },
@@ -106,7 +105,6 @@ export function SiteHeader() {
 
         <div className="header-tools">
           <ThemeSwitcher />
-          <SoundToggle />
           <Link className="header-cta" href="/contact">
             <SendIcon />
             <span className="header-cta-text">هماهنگی کلاس</span>

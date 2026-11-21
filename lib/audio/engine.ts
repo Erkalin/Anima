@@ -1,7 +1,6 @@
 /**
  * One AudioContext for the whole site, created inside the first user gesture.
- * Every voice passes through `master`, so the header's mute switch silences
- * the instrument samples and the metronome together.
+ * Every voice passes through `master`.
  */
 
 export type PianoVoice = "grand" | "felt" | "box" | "reed";
@@ -13,9 +12,7 @@ let master: GainNode | null = null;
 let dry: GainNode | null = null;
 let send: GainNode | null = null;
 let tail: ConvolverNode | null = null;
-let muted = false;
 const wetAmount = 0.28;
-const watchers = new Set<(muted: boolean) => void>();
 
 const HARMONICS: Record<PianoVoice, number[]> = {
   grand: [0, 1, 0.42, 0.2, 0.11, 0.06, 0.03, 0.015],
@@ -56,7 +53,7 @@ export function audio(): AudioContext | null {
   if (!ctx) {
     ctx = new Ctor();
     master = ctx.createGain();
-    master.gain.value = muted ? 0 : 1;
+    master.gain.value = 1;
     master.connect(ctx.destination);
 
     dry = ctx.createGain();
@@ -74,25 +71,9 @@ export function audio(): AudioContext | null {
   return ctx;
 }
 
-export function isMuted(): boolean {
-  return muted;
-}
-
-export function setMuted(next: boolean): void {
-  muted = next;
-  const ac = ctx;
-  if (ac && master) {
-    master.gain.cancelScheduledValues(ac.currentTime);
-    master.gain.setTargetAtTime(next ? 0 : 1, ac.currentTime, 0.02);
-  }
-  for (const fn of watchers) fn(next);
-}
-
-export function watchMute(fn: (muted: boolean) => void): () => void {
-  watchers.add(fn);
-  return () => {
-    watchers.delete(fn);
-  };
+/** Whether this browser can play sound at all. */
+export function audioSupported(): boolean {
+  return Boolean(contextCtor());
 }
 
 export function midiToFreq(midi: number, cents = 0): number {

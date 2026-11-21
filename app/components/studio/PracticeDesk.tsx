@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { audio, now, tick } from "@/lib/audio/engine";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { audio, audioSupported, now, tick } from "@/lib/audio/engine";
 import { toFa } from "@/lib/utils";
-import { useSound } from "./Sound";
 import { MetroIcon, PlayIcon, ResetIcon, StopIcon } from "./icons";
 
 const MARKS: [number, string][] = [
@@ -29,7 +28,7 @@ function tempoName(bpm: number): string {
 }
 
 export function PracticeDesk({ id = "desk" }: { id?: string }) {
-  const { muted, supported } = useSound();
+  const supported = useSyncExternalStore(() => () => {}, audioSupported, () => true);
   const [bpm, setBpm] = useState(DEFAULTS.bpm);
   const [meter, setMeter] = useState(DEFAULTS.meter);
   const [accent, setAccent] = useState(DEFAULTS.accent);
@@ -277,9 +276,7 @@ export function PracticeDesk({ id = "desk" }: { id?: string }) {
         <p className="deck-note" style={{ paddingInline: 0, paddingTop: "0.8rem" }}>
           {!supported
             ? "این مرورگر صدا ندارد؛ بازو و چراغ‌ها همچنان حرکت می‌کنند."
-            : muted
-              ? "صدا خاموش است. از کلید صدا در بالای صفحه روشنش کن."
-              : "وزنه که به سمت پایین می‌آید تندتر می‌شود؛ اسلایدر تندی همان کار را می‌کند. با «ضربه بزن» می‌توانی تندی قطعه‌ای را که می‌شنوی دربیآوری."}
+            : "وزنه که به سمت پایین می‌آید تندتر می‌شود؛ اسلایدر تندی همان کار را می‌کند. با «ضربه بزن» می‌توانی تندی قطعه‌ای را که می‌شنوی دربیآوری."}
         </p>
       </div>
     </div>

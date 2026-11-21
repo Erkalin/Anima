@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { useRouter } from "next/navigation";
 import type { ChatConversation, ChatMessage } from "@/lib/chat/types";
 import { MAX_BODY, MAX_NAME, REACTION_EMOJIS } from "@/lib/chat/types";
-import { isMuted, midiToFreq, strike } from "@/lib/audio/engine";
+import { midiToFreq, strike } from "@/lib/audio/engine";
 import { faDate, faRelative, toFa } from "@/lib/utils";
 import { Icon } from "./Icons";
 import { Modal } from "./ui";
@@ -31,7 +31,6 @@ function dayLabel(iso: string): string {
 }
 
 function pop() {
-  if (isMuted()) return;
   strike({ freq: midiToFreq(81), dur: 0.45, gain: 0.08, room: 0.25 });
 }
 

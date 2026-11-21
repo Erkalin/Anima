@@ -33,7 +33,6 @@ export function Metronome({
   const [running, setRunning] = useState(false);
   const [beat, setBeat] = useState(-1);
   const [volume, setVolume] = useState(0.6);
-  const [muted, setMuted] = useState(false);
 
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -44,13 +43,11 @@ export function Metronome({
   const bpmRef = useRef(bpm);
   const beatsRef = useRef(beats);
   const gainRef = useRef(volume);
-  const mutedRef = useRef(muted);
   const tapsRef = useRef<number[]>([]);
 
   bpmRef.current = bpm;
   beatsRef.current = beats;
   gainRef.current = volume;
-  mutedRef.current = muted;
 
   const stop = useCallback(() => {
     if (timerRef.current !== null) {
@@ -71,7 +68,7 @@ export function Metronome({
 
   const click = useCallback((time: number, accent: boolean) => {
     const ctx = ctxRef.current;
-    if (!ctx || mutedRef.current) return;
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.frequency.value = accent ? 1560 : 1040;
@@ -237,14 +234,6 @@ export function Metronome({
             ))}
           </select>
         </label>
-        <button
-          type="button"
-          className="md-metro-mute"
-          onClick={() => setMuted((m) => !m)}
-          aria-pressed={muted}
-        >
-          {muted ? "صدا خاموش" : "صدا روشن"}
-        </button>
         <label className="md-metro-field md-metro-vol">
           <span>بلندی</span>
           <input
