@@ -51,7 +51,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("anima:theme");if(t==="abnus"||t==="lajvard"||t==="arghavan"||t==="firuzeh"||t==="sahargah")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("anima:theme");if(/^(abnus|lajvard|arghavan|firuzeh|sahargah|nilufar|golab|bahar|zaferan|banafsheh)$/.test(t||""))document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`,
           }}
         />
       </head>

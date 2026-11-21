@@ -41,6 +41,46 @@ export const THEMES = [
     accent: "#965222",
     ink: "#2a1e14",
   },
+  {
+    id: "nilufar",
+    name: "نیلوفر",
+    note: "آسمانِ صبح و لاجوردِ روشن",
+    paper: "#f1f5fb",
+    accent: "#1d4ed8",
+    ink: "#111c33",
+  },
+  {
+    id: "golab",
+    name: "گلاب",
+    note: "مرمرِ گل‌بهی و یاقوت",
+    paper: "#fbf1f3",
+    accent: "#b82952",
+    ink: "#2d121c",
+  },
+  {
+    id: "bahar",
+    name: "بهار",
+    note: "بهارنارنج و زمردِ روشن",
+    paper: "#eef6f0",
+    accent: "#0f766e",
+    ink: "#11281d",
+  },
+  {
+    id: "zaferan",
+    name: "زعفران",
+    note: "عاجِ آفتابی و کهربا",
+    paper: "#fcf6e8",
+    accent: "#b84a0b",
+    ink: "#2c1d09",
+  },
+  {
+    id: "banafsheh",
+    name: "بنفشه",
+    note: "صدفِ یاسی و ارغوانِ روشن",
+    paper: "#f5f1fb",
+    accent: "#6d28d9",
+    ink: "#211536",
+  },
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]["id"];

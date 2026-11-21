@@ -1200,8 +1200,8 @@ html[dir="ltr"] .toggle[aria-pressed="true"] .toggle-track::after {
   background-image: linear-gradient(120deg, #d8b088, #c49a6c);
 }
 
-/* The light theme washes the card scrim light — keep the names dark there. */
-html[data-theme="sahargah"] .duet-panel .duet-name {
+/* Light themes wash the card scrim light — keep the names dark there. */
+html:is([data-theme="sahargah"], [data-theme="nilufar"], [data-theme="golab"], [data-theme="bahar"], [data-theme="zaferan"], [data-theme="banafsheh"]) .duet-panel .duet-name {
   background-image: linear-gradient(120deg, var(--ink), color-mix(in oklab, var(--tone) 70%, var(--ink)));
 }
 
@@ -1209,7 +1209,7 @@ html[data-theme="sahargah"] .duet-panel .duet-name {
 .duet-panel[data-instrument="piano"] .duet-link { color: #ffffff; }
 .duet-panel[data-instrument="violin"] .duet-link { color: #d8b088; }
 
-html[data-theme="sahargah"] .duet-panel .duet-link {
+html:is([data-theme="sahargah"], [data-theme="nilufar"], [data-theme="golab"], [data-theme="bahar"], [data-theme="zaferan"], [data-theme="banafsheh"]) .duet-panel .duet-link {
   color: color-mix(in oklab, var(--tone) 85%, var(--ink));
 }
 

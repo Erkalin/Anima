@@ -172,12 +172,227 @@ html[data-theme="sahargah"] {
     linear-gradient(160deg, #ebe1cf 0%, #efe6d6 55%, #f5ede0 100%);
 }
 
+html[data-theme="nilufar"] {
+  color-scheme: light;
+  --ink: #111c33;
+  --ink-strong: #091122;
+  --paper: #f1f5fb;
+  --paper-2: #e7eef8;
+  --paper-3: #dde6f4;
+  --paper-4: #d0dcf0;
+  --wood: #dfe8f6;
+  --brass: #1d4ed8;
+  --brass-hi: #1e40af;
+  --brass-on-dark: #1d4ed8;
+  --verdigris: #157347;
+  --copper: #c2383a;
+  --steel: #0369a1;
+  --velvet: #6d28d9;
+  --amber: #b45309;
+  --glow-brass: #1d4ed8;
+  --glow-copper: #c2383a;
+  --glow-steel: #0369a1;
+  --glow-rosin: #157347;
+  --glow-velvet: #6d28d9;
+  --glow-amber: #b45309;
+  --stage-0: #f7f9fd;
+  --stage-1: #f1f5fb;
+  --stage-2: #e7eef8;
+  --stage-3: #dde6f4;
+  --stage-4: #d0dcf0;
+  --cool: #16243d;
+  --scrim: rgba(17, 28, 51, 0.45);
+  --on-dark: #111c33;
+  --on-accent: #f8fbff;
+  --on-hot: #fff5f5;
+  --shadow-ink: #1e3358;
+  --cta-shadow: 0 -10px 30px rgba(30, 51, 88, 0.22);
+  --lift: 0 18px 44px -22px rgba(30, 51, 88, 0.32);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(29, 78, 216, 0.16), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(186, 204, 235, 0.45), transparent 70%),
+    linear-gradient(160deg, #dde6f4 0%, #e7eef8 55%, #f1f5fb 100%);
+}
+
+html[data-theme="golab"] {
+  color-scheme: light;
+  --ink: #2d121c;
+  --ink-strong: #1d0911;
+  --paper: #fbf1f3;
+  --paper-2: #f5e5e9;
+  --paper-3: #eed8de;
+  --paper-4: #e5c8d1;
+  --wood: #f0dde3;
+  --brass: #b82952;
+  --brass-hi: #991d42;
+  --brass-on-dark: #b82952;
+  --verdigris: #2f6f4e;
+  --copper: #b93822;
+  --steel: #2f5d8a;
+  --velvet: #7b3888;
+  --amber: #a15614;
+  --glow-brass: #b82952;
+  --glow-copper: #b93822;
+  --glow-steel: #2f5d8a;
+  --glow-rosin: #2f6f4e;
+  --glow-velvet: #7b3888;
+  --glow-amber: #a15614;
+  --stage-0: #fdf6f7;
+  --stage-1: #fbf1f3;
+  --stage-2: #f5e5e9;
+  --stage-3: #eed8de;
+  --stage-4: #e5c8d1;
+  --cool: #2b1725;
+  --scrim: rgba(45, 18, 28, 0.45);
+  --on-dark: #2d121c;
+  --on-accent: #fff8fa;
+  --on-hot: #fff4f2;
+  --shadow-ink: #542235;
+  --cta-shadow: 0 -10px 30px rgba(84, 34, 53, 0.22);
+  --lift: 0 18px 44px -22px rgba(84, 34, 53, 0.32);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(184, 41, 82, 0.16), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(226, 188, 200, 0.45), transparent 70%),
+    linear-gradient(160deg, #eed8de 0%, #f5e5e9 55%, #fbf1f3 100%);
+}
+
+html[data-theme="bahar"] {
+  color-scheme: light;
+  --ink: #11281d;
+  --ink-strong: #091a12;
+  --paper: #eef6f0;
+  --paper-2: #e2efe6;
+  --paper-3: #d5e7db;
+  --paper-4: #c4dccd;
+  --wood: #daeadd;
+  --brass: #0f766e;
+  --brass-hi: #0b5b54;
+  --brass-on-dark: #0f766e;
+  --verdigris: #1f7a3e;
+  --copper: #b94128;
+  --steel: #1d6189;
+  --velvet: #6d488c;
+  --amber: #9a600e;
+  --glow-brass: #0f766e;
+  --glow-copper: #b94128;
+  --glow-steel: #1d6189;
+  --glow-rosin: #1f7a3e;
+  --glow-velvet: #6d488c;
+  --glow-amber: #9a600e;
+  --stage-0: #f5faf6;
+  --stage-1: #eef6f0;
+  --stage-2: #e2efe6;
+  --stage-3: #d5e7db;
+  --stage-4: #c4dccd;
+  --cool: #142b26;
+  --scrim: rgba(17, 40, 29, 0.45);
+  --on-dark: #11281d;
+  --on-accent: #f4fffc;
+  --on-hot: #fff4ec;
+  --shadow-ink: #1a4233;
+  --cta-shadow: 0 -10px 30px rgba(26, 66, 51, 0.22);
+  --lift: 0 18px 44px -22px rgba(26, 66, 51, 0.3);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(15, 118, 110, 0.16), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(186, 218, 200, 0.45), transparent 70%),
+    linear-gradient(160deg, #d5e7db 0%, #e2efe6 55%, #eef6f0 100%);
+}
+
+html[data-theme="zaferan"] {
+  color-scheme: light;
+  --ink: #2c1d09;
+  --ink-strong: #1a1004;
+  --paper: #fcf6e8;
+  --paper-2: #f7ecd4;
+  --paper-3: #f1e2c0;
+  --paper-4: #e8d4aa;
+  --wood: #f3e6ca;
+  --brass: #b84a0b;
+  --brass-hi: #993c07;
+  --brass-on-dark: #b84a0b;
+  --verdigris: #2d6a42;
+  --copper: #b53226;
+  --steel: #245c84;
+  --velvet: #7c3f7e;
+  --amber: #8f5900;
+  --glow-brass: #b84a0b;
+  --glow-copper: #b53226;
+  --glow-steel: #245c84;
+  --glow-rosin: #2d6a42;
+  --glow-velvet: #7c3f7e;
+  --glow-amber: #8f5900;
+  --stage-0: #fefaf0;
+  --stage-1: #fcf6e8;
+  --stage-2: #f7ecd4;
+  --stage-3: #f1e2c0;
+  --stage-4: #e8d4aa;
+  --cool: #232018;
+  --scrim: rgba(44, 29, 9, 0.45);
+  --on-dark: #2c1d09;
+  --on-accent: #fffaf2;
+  --on-hot: #fff4ec;
+  --shadow-ink: #593e14;
+  --cta-shadow: 0 -10px 30px rgba(89, 62, 20, 0.24);
+  --lift: 0 18px 44px -22px rgba(89, 62, 20, 0.34);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(184, 74, 11, 0.18), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(232, 205, 152, 0.45), transparent 70%),
+    linear-gradient(160deg, #f1e2c0 0%, #f7ecd4 55%, #fcf6e8 100%);
+}
+
+html[data-theme="banafsheh"] {
+  color-scheme: light;
+  --ink: #211536;
+  --ink-strong: #140b24;
+  --paper: #f5f1fb;
+  --paper-2: #ebe4f6;
+  --paper-3: #e1d6f1;
+  --paper-4: #d3c4ea;
+  --wood: #e7def4;
+  --brass: #6d28d9;
+  --brass-hi: #581cb8;
+  --brass-on-dark: #6d28d9;
+  --verdigris: #256d4f;
+  --copper: #b93848;
+  --steel: #255d94;
+  --velvet: #8b2d86;
+  --amber: #9a5a12;
+  --glow-brass: #6d28d9;
+  --glow-copper: #b93848;
+  --glow-steel: #255d94;
+  --glow-rosin: #256d4f;
+  --glow-velvet: #8b2d86;
+  --glow-amber: #9a5a12;
+  --stage-0: #faf8fd;
+  --stage-1: #f5f1fb;
+  --stage-2: #ebe4f6;
+  --stage-3: #e1d6f1;
+  --stage-4: #d3c4ea;
+  --cool: #211936;
+  --scrim: rgba(33, 21, 54, 0.45);
+  --on-dark: #211536;
+  --on-accent: #fbf9ff;
+  --on-hot: #fff4f6;
+  --shadow-ink: #39225e;
+  --cta-shadow: 0 -10px 30px rgba(57, 34, 94, 0.24);
+  --lift: 0 18px 44px -22px rgba(57, 34, 94, 0.34);
+  --duotone:
+    radial-gradient(80% 60% at 30% 10%, rgba(109, 40, 217, 0.16), transparent 62%),
+    radial-gradient(120% 100% at 85% 100%, rgba(206, 188, 236, 0.45), transparent 70%),
+    linear-gradient(160deg, #e1d6f1 0%, #ebe4f6 55%, #f5f1fb 100%);
+}
+
 /* Alpha tokens derive from each room's own ink and band text, so hairlines
    and soft text stay correct on both dark and light grounds. */
 html[data-theme="lajvard"],
 html[data-theme="arghavan"],
 html[data-theme="firuzeh"],
-html[data-theme="sahargah"] {
+html[data-theme="sahargah"],
+html[data-theme="nilufar"],
+html[data-theme="golab"],
+html[data-theme="bahar"],
+html[data-theme="zaferan"],
+html[data-theme="banafsheh"] {
   --ink-soft: color-mix(in srgb, var(--ink) 68%, transparent);
   --oak: color-mix(in srgb, var(--ink) 22%, transparent);
   --edge: color-mix(in srgb, var(--ink) 34%, transparent);
@@ -236,6 +451,10 @@ html[data-theme="sahargah"] {
   top: calc(100% + 0.55rem);
   z-index: 50;
   width: min(17rem, calc(100vw - 2.5rem));
+  max-height: min(37rem, calc(100dvh - 5.5rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   padding: 0.5rem;
   border: 1px solid var(--hair-2, var(--edge));
   border-radius: var(--r-md, 9px);
@@ -251,9 +470,8 @@ html[data-theme="sahargah"] {
 
 .theme-pop-title {
   padding: 0.3rem 0.6rem 0.45rem;
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--ink-soft);
 }
 
