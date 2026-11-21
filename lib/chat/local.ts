@@ -114,12 +114,12 @@ export async function conversationByToken(
   return store.conversations.find((c) => c.visitorToken === token) ?? null;
 }
 
-export async function renameConversation(
-  token: string,
+export async function renameConversationById(
+  id: string,
   name: string,
 ): Promise<ChatConversation | null> {
   return mutate((store) => {
-    const conv = store.conversations.find((c) => c.visitorToken === token);
+    const conv = conversationOf(store, id);
     if (!conv) return null;
     conv.visitorName = name;
     return conv;
@@ -231,14 +231,16 @@ export async function sendMessage(
   });
 }
 
+/** Only admins may edit messages (visitor or admin). */
 export async function editMessage(
   id: string,
   actor: ChatSender,
   body: string,
 ): Promise<ChatMessage | null> {
+  if (actor !== "admin") return null;
   return mutate((store) => {
     const msg = messageOf(store, id);
-    if (!msg || msg.sender !== actor || msg.deletedAt) return null;
+    if (!msg || msg.deletedAt) return null;
     msg.body = body;
     msg.editedAt = now();
     msg.updatedAt = msg.editedAt;
@@ -250,15 +252,15 @@ export async function editMessage(
   });
 }
 
-/** Visitors delete only their own; admins may delete any message. */
+/** Only admins may delete messages (visitor or admin). */
 export async function deleteMessage(
   id: string,
   actor: ChatSender,
 ): Promise<ChatMessage | null> {
+  if (actor !== "admin") return null;
   return mutate((store) => {
     const msg = messageOf(store, id);
     if (!msg || msg.deletedAt) return null;
-    if (actor === "visitor" && msg.sender !== "visitor") return null;
     msg.deletedAt = now();
     msg.updatedAt = msg.deletedAt;
     msg.body = "";

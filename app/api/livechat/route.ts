@@ -3,9 +3,6 @@ import {
   MAX_BODY,
   MAX_NAME,
   conversationByToken,
-  deleteMessage,
-  editMessage,
-  renameConversation,
   sendMessage,
   setTyping,
   startConversation,
@@ -117,12 +114,10 @@ export async function POST(req: NextRequest) {
     if (!conv) return NextResponse.json({ error: "conversation" }, { status: 404 });
 
     switch (action) {
-      case "rename": {
-        const name = cleanName(body.name);
-        if (!name) return NextResponse.json({ error: "name" }, { status: 400 });
-        const renamed = await renameConversation(token, name);
-        return NextResponse.json({ conversation: renamed ? publicConv(renamed) : null });
-      }
+      case "rename":
+      case "edit":
+      case "delete":
+        return NextResponse.json({ error: "forbidden" }, { status: 403 });
       case "send": {
         const text = cleanBody(body.body);
         if (!text) return NextResponse.json({ error: "body" }, { status: 400 });
@@ -130,20 +125,6 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: "rate" }, { status: 429 });
         }
         const message = await sendMessage(conv.id, "visitor", text);
-        return NextResponse.json({ message });
-      }
-      case "edit": {
-        const text = cleanBody(body.body);
-        const id = typeof body.id === "string" ? body.id : "";
-        if (!text || !id) return NextResponse.json({ error: "bad" }, { status: 400 });
-        const message = await editMessage(id, "visitor", text);
-        if (!message) return NextResponse.json({ error: "forbidden" }, { status: 403 });
-        return NextResponse.json({ message });
-      }
-      case "delete": {
-        const id = typeof body.id === "string" ? body.id : "";
-        const message = await deleteMessage(id, "visitor");
-        if (!message) return NextResponse.json({ error: "forbidden" }, { status: 403 });
         return NextResponse.json({ message });
       }
       case "react": {

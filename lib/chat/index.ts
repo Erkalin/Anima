@@ -25,10 +25,10 @@ export async function conversationByToken(token: string) {
     : local.conversationByToken(token);
 }
 
-export async function renameConversation(token: string, name: string) {
+export async function renameConversationById(id: string, name: string) {
   return isRemote()
-    ? remote.renameConversation(token, name)
-    : local.renameConversation(token, name);
+    ? remote.renameConversationById(id, name)
+    : local.renameConversationById(id, name);
 }
 
 export async function listConversations() {

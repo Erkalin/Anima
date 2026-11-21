@@ -115,14 +115,14 @@ export async function conversationByToken(
   return data ? toConversation(data) : null;
 }
 
-export async function renameConversation(
-  token: string,
+export async function renameConversationById(
+  id: string,
   name: string,
 ): Promise<ChatConversation | null> {
   const { data, error } = await serviceClient()
     .from("chat_conversations")
     .update({ visitor_name: name })
-    .eq("visitor_token", token)
+    .eq("id", id)
     .select("*")
     .maybeSingle();
   fail("rename", error);
@@ -290,16 +290,26 @@ export async function editMessage(
   actor: ChatSender,
   body: string,
 ): Promise<ChatMessage | null> {
+  if (actor !== "admin") return null;
   const msg = await messageById(id);
-  if (!msg || msg.sender !== actor || msg.deletedAt) return null;
+  if (!msg || msg.deletedAt) return null;
   const at = now();
-  const { data, error } = await serviceClient()
+  const db = serviceClient();
+  const { data, error } = await db
     .from("chat_messages")
     .update({ body, edited_at: at, updated_at: at })
     .eq("id", id)
     .select("*")
     .single();
   fail("edit", error);
+  if (data) {
+    const upd = await db
+      .from("chat_conversations")
+      .update({ last_preview: previewOf(body) })
+      .eq("id", msg.conversationId)
+      .eq("last_message_at", msg.createdAt);
+    fail("edit.preview", upd.error);
+  }
   return data ? toMessage(data) : null;
 }
 
@@ -307,11 +317,12 @@ export async function deleteMessage(
   id: string,
   actor: ChatSender,
 ): Promise<ChatMessage | null> {
+  if (actor !== "admin") return null;
   const msg = await messageById(id);
   if (!msg || msg.deletedAt) return null;
-  if (actor === "visitor" && msg.sender !== "visitor") return null;
   const at = now();
-  const { data, error } = await serviceClient()
+  const db = serviceClient();
+  const { data, error } = await db
     .from("chat_messages")
     .update({
       body: "",
@@ -323,6 +334,14 @@ export async function deleteMessage(
     .select("*")
     .single();
   fail("delete", error);
+  if (data) {
+    const upd = await db
+      .from("chat_conversations")
+      .update({ last_preview: "این پیام حذف شد" })
+      .eq("id", msg.conversationId)
+      .eq("last_message_at", msg.createdAt);
+    fail("delete.preview", upd.error);
+  }
   return data ? toMessage(data) : null;
 }
 

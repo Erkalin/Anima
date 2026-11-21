@@ -2,11 +2,13 @@ import { NextResponse, connection, type NextRequest } from "next/server";
 import { currentAdmin } from "@/lib/auth/dal";
 import {
   MAX_BODY,
+  MAX_NAME,
   adminPoll,
   deleteMessage,
   editMessage,
   listConversations,
   removeConversation,
+  renameConversationById,
   sendMessage,
   setArchived,
   setTyping,
@@ -21,6 +23,8 @@ import { isOnline, isTyping } from "@/lib/chat/types";
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+const cleanName = (v: unknown) =>
+  typeof v === "string" ? v.replace(/\s+/g, " ").trim().slice(0, MAX_NAME) : "";
 const cleanBody = (v: unknown) =>
   typeof v === "string" ? v.trim().slice(0, MAX_BODY) : "";
 
@@ -112,6 +116,15 @@ export async function POST(req: NextRequest) {
         if (!UUID_RE.test(convId)) return NextResponse.json({ error: "bad" }, { status: 400 });
         await setArchived(convId, body.on === true);
         return NextResponse.json({ ok: true });
+      }
+      case "rename": {
+        const name = cleanName(body.name);
+        if (!name || !UUID_RE.test(convId)) {
+          return NextResponse.json({ error: "bad" }, { status: 400 });
+        }
+        const conversation = await renameConversationById(convId, name);
+        if (!conversation) return NextResponse.json({ error: "conversation" }, { status: 404 });
+        return NextResponse.json({ conversation });
       }
       case "remove": {
         if (!UUID_RE.test(convId)) return NextResponse.json({ error: "bad" }, { status: 400 });

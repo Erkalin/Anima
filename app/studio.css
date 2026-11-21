@@ -3499,22 +3499,10 @@ textarea.compose-bubble:focus-visible {
 }
 
 .live-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: none;
-  border: none;
-  padding: 0.1rem 0.2rem;
   color: var(--ink);
-  font-family: inherit;
   font-size: 0.8rem;
   font-weight: 800;
-  cursor: pointer;
-  border-radius: 0.4rem;
 }
-
-.live-name:hover { background: color-mix(in oklab, var(--ink) 8%, transparent); }
-.live-name svg { width: 0.75rem; height: 0.75rem; opacity: 0.55; }
 
 .live-rename { display: flex; align-items: center; gap: 0.3rem; flex: 1; }
 

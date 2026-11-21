@@ -7,7 +7,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { ChatConversation, ChatMessage } from "@/lib/chat/types";
-import { MAX_BODY, REACTION_EMOJIS } from "@/lib/chat/types";
+import { MAX_BODY, MAX_NAME, REACTION_EMOJIS } from "@/lib/chat/types";
 import { isMuted, midiToFreq, strike } from "@/lib/audio/engine";
 import { faDate, faRelative, toFa } from "@/lib/utils";
 import { Icon } from "./Icons";
@@ -63,6 +63,8 @@ export function Inbox() {
   const [pickerFor, setPickerFor] = useState<string | null>(null);
   const [confirmMsgFor, setConfirmMsgFor] = useState<string | null>(null);
   const [confirmRemove, setConfirmRemove] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [renameDraft, setRenameDraft] = useState("");
 
   const msgsRef = useRef<ChatMessage[]>([]);
   const sinceRef = useRef<string | null>(null);
@@ -187,6 +189,7 @@ export function Inbox() {
     setEditingId(null);
     setPickerFor(null);
     setConfirmMsgFor(null);
+    setRenaming(false);
   }
 
   async function send(e: FormEvent) {
@@ -214,6 +217,13 @@ export function Inbox() {
     const { ok, data } = await api({ action: "edit", id, body: text }).catch(() => ({ ok: false, data: {} as Record<string, never> }));
     if (ok && data.message) {
       applyIncoming([data.message]);
+      setConvs((prev) =>
+        prev.map((c) =>
+          c.id === data.message.conversationId && c.lastMessageAt === data.message.createdAt
+            ? { ...c, lastPreview: text.replace(/\s+/g, " ").trim().slice(0, 90) }
+            : c,
+        ),
+      );
       setEditingId(null);
     }
   }
@@ -221,7 +231,30 @@ export function Inbox() {
   async function removeMessage(id: string) {
     setConfirmMsgFor(null);
     const { ok, data } = await api({ action: "delete", id }).catch(() => ({ ok: false, data: {} as Record<string, never> }));
-    if (ok && data.message) applyIncoming([data.message]);
+    if (ok && data.message) {
+      applyIncoming([data.message]);
+      setConvs((prev) =>
+        prev.map((c) =>
+          c.id === data.message.conversationId && c.lastMessageAt === data.message.createdAt
+            ? { ...c, lastPreview: "این پیام حذف شد" }
+            : c,
+        ),
+      );
+    }
+  }
+
+  async function saveRename(e: FormEvent) {
+    e.preventDefault();
+    if (!selected) return;
+    const name = renameDraft.replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
+    if (!name) return;
+    const { ok, data } = await api({ action: "rename", conversation: selected.id, name }).catch(() => ({ ok: false, data: {} as Record<string, never> }));
+    if (ok && data.conversation) {
+      setConvs((prev) =>
+        prev.map((c) => (c.id === selected.id ? { ...c, visitorName: data.conversation.visitorName } : c)),
+      );
+      setRenaming(false);
+    }
   }
 
   async function react(id: string, emoji: string) {
@@ -368,7 +401,45 @@ export function Inbox() {
                 {selected.visitorName.trim().slice(0, 1) || "؟"}
               </span>
               <div className="inbox-who">
-                <b>{selected.visitorName}</b>
+                {renaming ? (
+                  <form className="inbox-rename" onSubmit={saveRename}>
+                    <input
+                      type="text"
+                      value={renameDraft}
+                      onChange={(e) => setRenameDraft(e.target.value)}
+                      maxLength={MAX_NAME}
+                      aria-label="نام تازهٔ کاربر"
+                      autoFocus
+                    />
+                    <button type="submit" className="icon-btn" aria-label="ذخیرهٔ نام">
+                      <Icon name="check" />
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      onClick={() => setRenaming(false)}
+                      aria-label="انصراف"
+                    >
+                      <Icon name="x" />
+                    </button>
+                  </form>
+                ) : (
+                  <div className="inbox-who-row">
+                    <b>{selected.visitorName}</b>
+                    <button
+                      type="button"
+                      className="icon-btn inbox-who-edit"
+                      onClick={() => {
+                        setRenameDraft(selected.visitorName);
+                        setRenaming(true);
+                      }}
+                      title="ویرایش نام کاربر"
+                      aria-label="ویرایش نام کاربر"
+                    >
+                      <Icon name="edit" />
+                    </button>
+                  </div>
+                )}
                 <span data-online={visitorOnline || undefined}>
                   {visitorTyping
                     ? "در حال نوشتن…"
@@ -469,21 +540,19 @@ export function Inbox() {
                             >
                               <Icon name="smile" />
                             </button>
-                            {mine ? (
-                              <button
-                                type="button"
-                                className="icon-btn"
-                                onClick={() => {
-                                  setEditingId(m.id);
-                                  setEditDraft(m.body);
-                                  setPickerFor(null);
-                                }}
-                                aria-label="ویرایش"
-                                title="ویرایش"
-                              >
-                                <Icon name="edit" />
-                              </button>
-                            ) : null}
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              onClick={() => {
+                                setEditingId(m.id);
+                                setEditDraft(m.body);
+                                setPickerFor(null);
+                              }}
+                              aria-label="ویرایش"
+                              title="ویرایش"
+                            >
+                              <Icon name="edit" />
+                            </button>
                             <button
                               type="button"
                               className="icon-btn"

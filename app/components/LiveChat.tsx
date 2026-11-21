@@ -17,12 +17,8 @@ import { isMuted, midiToFreq, strike } from "@/lib/audio/engine";
 import { cx, faDate, toFa } from "@/lib/utils";
 import {
   BackIcon,
-  CheckIcon,
-  CloseIcon,
-  EditIcon,
   SendIcon,
   SmileIcon,
-  TrashIcon,
 } from "./studio/icons";
 
 export const LIVE_STORE_KEY = "anima-livechat-v1";
@@ -78,12 +74,8 @@ export function LiveChat({
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<Set<string>>(new Set());
   const [adminTyping, setAdminTyping] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editDraft, setEditDraft] = useState("");
   const [pickerFor, setPickerFor] = useState<string | null>(null);
-  const [confirmFor, setConfirmFor] = useState<string | null>(null);
-  const [renaming, setRenaming] = useState(false);
-  const [renameDraft, setRenameDraft] = useState("");
+  const [syncedName, setSyncedName] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
 
   const msgsRef = useRef<ChatMessage[]>([]);
@@ -146,11 +138,27 @@ export function LiveChat({
             /* ignore */
           }
           setIdentity(null);
+          setSyncedName(null);
           setGateNote("گفتگوی پیشین بسته شد؛ می‌توانی گفتگوی تازه‌ای شروع کنی.");
           commit([]);
           return;
         }
         sinceRef.current = d.serverNow;
+        const serverName =
+          typeof d.conversation?.name === "string" ? d.conversation.name : "";
+        if (serverName) {
+          setSyncedName(serverName);
+          if (serverName !== identity!.name) {
+            try {
+              window.localStorage.setItem(
+                LIVE_STORE_KEY,
+                JSON.stringify({ ...identity!, name: serverName }),
+              );
+            } catch {
+              /* ignore */
+            }
+          }
+        }
         setAdminTyping(Boolean(d.conversation?.adminTyping));
         const freshAdmin = (d.messages as ChatMessage[]).filter(
           (m) =>
@@ -235,6 +243,7 @@ export function LiveChat({
       sinceRef.current = null;
       firstPoll.current = true;
       setGateNote("");
+      setSyncedName(name);
       setIdentity(next);
     } catch {
       setGateNote("اتصال برقرار نشد؛ دوباره تلاش کن.");
@@ -288,32 +297,7 @@ export function LiveChat({
     }
   }
 
-  // ---- message actions --------------------------------------------------
-  async function saveEdit(id: string) {
-    if (!identity) return;
-    const text = editDraft.trim().slice(0, MAX_BODY);
-    if (!text) return;
-    try {
-      const { ok, data } = await post({ action: "edit", id, body: text }, identity.token);
-      if (ok && data.message) applyIncoming([data.message]);
-    } catch {
-      /* keep the editor open so the user can retry */
-      return;
-    }
-    setEditingId(null);
-  }
-
-  async function confirmDelete(id: string) {
-    if (!identity) return;
-    setConfirmFor(null);
-    try {
-      const { ok, data } = await post({ action: "delete", id }, identity.token);
-      if (ok && data.message) applyIncoming([data.message]);
-    } catch {
-      /* next poll reconciles */
-    }
-  }
-
+  // ---- reactions --------------------------------------------------------
   async function react(id: string, emoji: string) {
     if (!identity) return;
     setPickerFor(null);
@@ -323,28 +307,6 @@ export function LiveChat({
     } catch {
       /* next poll reconciles */
     }
-  }
-
-  async function saveRename() {
-    if (!identity) return;
-    const name = renameDraft.replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
-    if (!name) return;
-    try {
-      const { ok } = await post({ action: "rename", name }, identity.token);
-      if (ok) {
-        const next = { ...identity, name };
-        try {
-          window.localStorage.setItem(LIVE_STORE_KEY, JSON.stringify(next));
-        } catch {
-          /* ignore */
-        }
-        setIdentity(next);
-      }
-    } catch {
-      /* keep editing */
-      return;
-    }
-    setRenaming(false);
   }
 
   // ---- render -----------------------------------------------------------
@@ -381,6 +343,8 @@ export function LiveChat({
     );
   }
 
+  const shownName = syncedName ?? identity.name;
+
   return (
     <>
       <div className="live-head">
@@ -398,50 +362,9 @@ export function LiveChat({
 
       <div className="live-name-row">
         <span className="live-name-avatar" aria-hidden="true">
-          {identity.name.slice(0, 1)}
+          {shownName.slice(0, 1)}
         </span>
-        {renaming ? (
-          <form
-            className="live-rename"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void saveRename();
-            }}
-          >
-            <input
-              type="text"
-              value={renameDraft}
-              onChange={(e) => setRenameDraft(e.target.value)}
-              maxLength={MAX_NAME}
-              aria-label="نام تازه"
-              autoFocus
-            />
-            <button type="submit" className="widget-icon-btn" aria-label="ذخیرهٔ نام">
-              <CheckIcon />
-            </button>
-            <button
-              type="button"
-              className="widget-icon-btn"
-              onClick={() => setRenaming(false)}
-              aria-label="انصراف"
-            >
-              <CloseIcon />
-            </button>
-          </form>
-        ) : (
-          <button
-            type="button"
-            className="live-name"
-            onClick={() => {
-              setRenameDraft(identity.name);
-              setRenaming(true);
-            }}
-            title="ویرایش نام"
-          >
-            {identity.name}
-            <EditIcon />
-          </button>
-        )}
+        <span className="live-name">{shownName}</span>
       </div>
 
       <div className="widget-body">
@@ -474,41 +397,11 @@ export function LiveChat({
                   <div className="live-bubble-wrap">
                     {m.deletedAt ? (
                       <p className="chat-bubble chat-deleted">این پیام حذف شد</p>
-                    ) : editingId === m.id ? (
-                      <form
-                        className="live-edit"
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          void saveEdit(m.id);
-                        }}
-                      >
-                        <textarea
-                          value={editDraft}
-                          onChange={(e) => setEditDraft(e.target.value)}
-                          maxLength={MAX_BODY}
-                          rows={2}
-                          aria-label="ویرایش پیام"
-                          autoFocus
-                        />
-                        <span className="live-edit-btns">
-                          <button type="submit" className="widget-icon-btn" aria-label="ذخیره">
-                            <CheckIcon />
-                          </button>
-                          <button
-                            type="button"
-                            className="widget-icon-btn"
-                            onClick={() => setEditingId(null)}
-                            aria-label="انصراف"
-                          >
-                            <CloseIcon />
-                          </button>
-                        </span>
-                      </form>
                     ) : (
                       <p className="chat-bubble">{m.body}</p>
                     )}
 
-                    {!m.deletedAt && !isTmp && editingId !== m.id ? (
+                    {!m.deletedAt && !isTmp ? (
                       <span className="live-actions">
                         <button
                           type="button"
@@ -518,30 +411,6 @@ export function LiveChat({
                         >
                           <SmileIcon />
                         </button>
-                        {mine ? (
-                          <>
-                            <button
-                              type="button"
-                              className="live-act"
-                              onClick={() => {
-                                setEditingId(m.id);
-                                setEditDraft(m.body);
-                                setPickerFor(null);
-                              }}
-                              aria-label="ویرایش پیام"
-                            >
-                              <EditIcon />
-                            </button>
-                            <button
-                              type="button"
-                              className="live-act"
-                              onClick={() => setConfirmFor(confirmFor === m.id ? null : m.id)}
-                              aria-label="حذف پیام"
-                            >
-                              <TrashIcon />
-                            </button>
-                          </>
-                        ) : null}
                       </span>
                     ) : null}
 
@@ -557,18 +426,6 @@ export function LiveChat({
                             {emoji}
                           </button>
                         ))}
-                      </span>
-                    ) : null}
-
-                    {confirmFor === m.id ? (
-                      <span className="live-confirm">
-                        حذف شود؟
-                        <button type="button" onClick={() => void confirmDelete(m.id)}>
-                          بله
-                        </button>
-                        <button type="button" onClick={() => setConfirmFor(null)}>
-                          نه
-                        </button>
                       </span>
                     ) : null}
                   </div>
